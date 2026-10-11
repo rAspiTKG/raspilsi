@@ -1,0 +1,185 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Sat Oct 10 16:58:27 2026
+[*]
+[dumpfile] "/mnt/b/WSL/work/Arm/raspilsi/AXI/master/sim/waves.fst"
+[dumpfile_mtime] "Sat Oct 10 16:36:52 2026"
+[dumpfile_size] 77086
+[savefile] "/mnt/b/WSL/work/Arm/raspilsi/AXI/master/sim/stream.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-21.611681 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_axi4_full_master_stream.
+[sst_width] 297
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 157
+@c00200
+-dut
+@28
+tb_axi4_full_master_stream.u_dut.aclk
+tb_axi4_full_master_stream.u_dut.aresetn
+@800200
+-ar
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_arvalid
+tb_axi4_full_master_stream.u_dut.m_axi_arready
+@24
+tb_axi4_full_master_stream.u_dut.m_axi_araddr[31:0]
+tb_axi4_full_master_stream.u_dut.m_axi_arid[3:0]
+tb_axi4_full_master_stream.u_dut.m_axi_arlen[7:0]
+tb_axi4_full_master_stream.u_dut.m_axi_arsize[2:0]
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_arburst[1:0]
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_arcache[3:0]
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_arlock
+tb_axi4_full_master_stream.u_dut.m_axi_arprot[2:0]
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_arqos[3:0]
+tb_axi4_full_master_stream.u_dut.m_axi_arregion[3:0]
+@1000200
+-ar
+@800200
+-r
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_rvalid
+tb_axi4_full_master_stream.u_dut.m_axi_rready
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_rdata[63:0]
+@24
+tb_axi4_full_master_stream.u_dut.m_axi_rid[3:0]
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_rlast
+tb_axi4_full_master_stream.u_dut.m_axi_rresp[1:0]
+@1000200
+-r
+@c00200
+-aw
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_awvalid
+tb_axi4_full_master_stream.u_dut.m_axi_awready
+@24
+tb_axi4_full_master_stream.u_dut.m_axi_awaddr[31:0]
+tb_axi4_full_master_stream.u_dut.m_axi_awid[3:0]
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_awsize[2:0]
+@24
+tb_axi4_full_master_stream.u_dut.m_axi_awlen[7:0]
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_awburst[1:0]
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_awcache[3:0]
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_awlock
+tb_axi4_full_master_stream.u_dut.m_axi_awprot[2:0]
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_awqos[3:0]
+tb_axi4_full_master_stream.u_dut.m_axi_awregion[3:0]
+@1401200
+-aw
+@800200
+-w
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_wvalid
+tb_axi4_full_master_stream.u_dut.m_axi_wready
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_wdata[63:0]
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_wlast
+@22
+tb_axi4_full_master_stream.u_dut.m_axi_wstrb[7:0]
+@1000200
+-w
+@c00200
+-b
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_bvalid
+tb_axi4_full_master_stream.u_dut.m_axi_bready
+@24
+tb_axi4_full_master_stream.u_dut.m_axi_bid[3:0]
+@28
+tb_axi4_full_master_stream.u_dut.m_axi_bresp[1:0]
+@1401200
+-b
+-dut
+@c00201
+-DRAM
+@28
+tb_axi4_full_master_stream.u_mem.aclk
+tb_axi4_full_master_stream.u_mem.aresetn
+@c00200
+-AR
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_arvalid
+tb_axi4_full_master_stream.u_mem.s_axi_arready
+@24
+tb_axi4_full_master_stream.u_mem.s_axi_araddr[31:0]
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_arburst[1:0]
+@24
+tb_axi4_full_master_stream.u_mem.s_axi_arid[3:0]
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_arsize[2:0]
+@24
+tb_axi4_full_master_stream.u_mem.s_axi_arlen[7:0]
+@1401200
+-AR
+@c00200
+-R
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_rvalid
+tb_axi4_full_master_stream.u_mem.s_axi_rready
+@22
+tb_axi4_full_master_stream.u_mem.s_axi_rdata[63:0]
+@24
+tb_axi4_full_master_stream.u_mem.s_axi_rid[3:0]
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_rlast
+tb_axi4_full_master_stream.u_mem.s_axi_rresp[1:0]
+@1401200
+-R
+@c00200
+-AW
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_awvalid
+tb_axi4_full_master_stream.u_mem.s_axi_awready
+@24
+tb_axi4_full_master_stream.u_mem.s_axi_awaddr[31:0]
+tb_axi4_full_master_stream.u_mem.s_axi_awsize[2:0]
+tb_axi4_full_master_stream.u_mem.s_axi_awid[3:0]
+tb_axi4_full_master_stream.u_mem.s_axi_awlen[7:0]
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_awburst[1:0]
+@1401200
+-AW
+@c00200
+-B
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_bvalid
+tb_axi4_full_master_stream.u_mem.s_axi_bready
+@24
+tb_axi4_full_master_stream.u_mem.s_axi_bid[3:0]
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_bresp[1:0]
+@1401200
+-B
+@c00200
+-W
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_wvalid
+tb_axi4_full_master_stream.u_mem.s_axi_wready
+@22
+tb_axi4_full_master_stream.u_mem.s_axi_wdata[63:0]
+@28
+tb_axi4_full_master_stream.u_mem.s_axi_wlast
+@24
+tb_axi4_full_master_stream.u_mem.s_axi_wstrb[7:0]
+@1401200
+-W
+@1401201
+-DRAM
+[pattern_trace] 1
+[pattern_trace] 0
