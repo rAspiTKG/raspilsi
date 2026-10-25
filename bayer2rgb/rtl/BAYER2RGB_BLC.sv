@@ -23,7 +23,21 @@ module BAYER2RGB_BLC
   always_comb begin
     for( int i=0; i<PPC; i++ ) begin
       s_site[i] = f_site(i_cfg.phase, i_stp.line[0], f_xpar(i_stp.col[0], 1'(i)));
-      s_lvl[i]  = i_cfg.blc[s_site[i]];
+      // 色位置で黒レベルを選ぶ(添字が変数の配列読み出しにしない)
+      case( s_site[i] )
+        2'd0 : begin
+          s_lvl[i] = i_cfg.blc[0];
+        end
+        2'd1 : begin
+          s_lvl[i] = i_cfg.blc[1];
+        end
+        2'd2 : begin
+          s_lvl[i] = i_cfg.blc[2];
+        end
+        default : begin
+          s_lvl[i] = i_cfg.blc[3];
+        end
+      endcase
       if( !i_cfg.blc_en ) begin
         s_q[i] = i_stp.pix[i];
       end else if( i_stp.pix[i]>s_lvl[i] ) begin

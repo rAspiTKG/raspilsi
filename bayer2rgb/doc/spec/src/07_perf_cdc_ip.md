@@ -36,6 +36,15 @@ clk = 400 MHz のときの値です。
 - PPC を下げると CORE の演算器(DMSC、FCS、GAMMA)がほぼ PPC に比例して減ります。4K 60 fps なら PPC=2(96 fps)、4K 30 fps なら PPC=1(48 fps)で足ります。
 - SRAM の容量は PPC によらずほぼ同じです(下の表)。
 
+PPC ごとの論理合成の結果(ASAP7、WC コーナー、400 MHz。14.3。SRAM は仮マクロ):
+
+| PPC | セル数 | 面積(合計) | 標準セル | SRAM | GAMMA | FCS | DMSC | セットアップ WNS(配線なし) |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 166,032 | 26,583 um² | 18,674 um² | 7,909 um² | 6,099 um² | 3,755 um² | 2,321 um² | +0.639 ns |
+| 4 | 98,567 | 19,168 um² | 11,445 um² | 7,722 um² | 3,011 um² | 1,872 um² | 1,182 um² | +0.680 ns |
+| 2 | 65,020 | 15,584 um² | 7,955 um² | 7,629 um² | 1,558 um² | 980 um² | 606 um² | +0.637 ns |
+| 1 | 48,308 | 13,738 um² | 6,154 um² | 7,584 um² | 778 um² | 512 um² | 318 um² | +0.653 ns |
+
 ### 10.4 SRAM の一覧
 
 | 用途 | インスタンス | ワード × ビット(PPC=8) | 容量 |
@@ -73,20 +82,28 @@ MCP のデータ(No.3、6)は、トグルが受け側で同期化されて検出
 - No.3、6(MCP のデータ): 通常のタイミング検査から外し、データの遅れ(クロックの遅れを含めない)を受け側クロックの1周期以内に制限します。データのビットどうしのばらつきも1周期以内にします。
 - 同期化セルの1段目と2段目は近くに置きます(同期化専用セルを使う。12章)。
 
-制約の例(SDC。セル名は合成後の名前に合わせてください。`-datapath_only` が使えないツールでは、そのツールのクロックの遅れを除く指定を使ってください):
+制約は `syn/constraints/bayer2rgb.sdc` にあります(論理合成・配置配線・STA で共通。14.2)。2つのクロックの間の経路は上の表の6種類だけなので、セル名を使わず、クロックどうしの指定で書いています。`set_clock_groups -asynchronous` は遅れの上限まで消してしまうので使いません。
 
 ```tcl
-create_clock -name clk      -period 2.500  [get_ports clk]
-create_clock -name ctrl_clk -period 10.000 [get_ports ctrl_clk]
+create_clock -name clk         -period 2.500  [get_ports clk]
+create_clock -name ctrl_clk    -period 10.000 [get_ports ctrl_clk]
+# 入出力の相手(IP の外の FF)のクロック。仮想クロック(14.2)
+create_clock -name clk_io      -period 2.500
+create_clock -name ctrl_clk_io -period 10.000
 
-# No.1, 3: ctrl_clk → clk
-set_max_delay -datapath_only 2.500  -from [get_cells {u_cdc/r_req_c_reg u_cdc/r_pl_*}]  -to [get_clocks clk]
-# No.2, 5: 受け側が ctrl_clk / clk の ACK トグル
-set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_req_d_v_reg}]            -to [get_clocks ctrl_clk]
-set_max_delay -datapath_only 2.500  -from [get_cells {u_cdc/r_ev_req_d_c_reg}]         -to [get_clocks clk]
-# No.4, 6: clk → ctrl_clk
-set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_ev_req_v_reg u_cdc/r_ev_pl_v_reg*}] -to [get_clocks ctrl_clk]
+# No.1〜6: データの遅れ(クロックの遅れを含めない)を受け側の1周期以内にする
+set b2r_dom_clk  [get_clocks {clk clk_io}]
+set b2r_dom_ctrl [get_clocks {ctrl_clk ctrl_clk_io}]
+set_max_delay 2.500  -ignore_clock_latency -from $b2r_dom_ctrl -to $b2r_dom_clk
+set_max_delay 10.000 -ignore_clock_latency -from $b2r_dom_clk  -to $b2r_dom_ctrl
+# ホールドは検査しない
+set_false_path -hold -from $b2r_dom_ctrl -to $b2r_dom_clk
+set_false_path -hold -from $b2r_dom_clk  -to $b2r_dom_ctrl
 ```
+
+入出力の相手のクロック(`clk_io`、`ctrl_clk_io`)は、それぞれ `clk` 側、`ctrl_clk` 側に含めています。合成後の STA で、2つの側の間の経路の終点の数を数えています(`syn/yosys` の `reports/sta_cdc.txt`)。PPC=8/4/2/1 のすべてで、clk → ctrl_clk が 6、ctrl_clk → clk が 799(設定の受け渡しのデータとトグル)、仮想クロックと反対側のクロックの間が 0 でした。
+
+`-ignore_clock_latency` は、経路の余裕の計算からクロックの遅れ(スキュー)を除く指定です [R25]。OpenSTA(OpenROAD)で使えることを確かめています。使えないツールでは、そのツールのクロックの遅れを除く指定(例 `-datapath_only`)に置き換えてください。
 
 ### 11.3 リセット
 
@@ -106,7 +123,7 @@ set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_ev_req_v_reg u_cdc
 ### 12.1 SRAM の置き換え
 
 1. 10.4 の5種類の大きさ(ワード数 × ビット幅)のマクロを SRAM コンパイラで作ります。ビット幅が合わないときは、幅の広いマクロを使うか、複数個を並べます。
-2. `rtl/BAYER2RGB_SRAM_1R1W.sv` の中の `BAYER2RGB_SRAM_1R1W_BHV` を、DEPTH / DW で選んだマクロのインスタンスに書き換えます(generate で大きさごとに分ける)。
+2. 論理合成用のラッパ `syn/rtl/foundry/BAYER2RGB_SRAM_1R1W.sv`(雛形。DEPTH / DW でマクロを選ぶ generate)のマクロ名と端子名を、コンパイラの出力に合わせて書き換えます。論理合成では `rtl/` の同じ名前のファイルの代わりにこれを読みます(14章)。`rtl/` のラッパはシミュレーション用(振る舞いモデルを呼ぶ)のまま残します。
 3. マクロの性質がラッパの約束と違う場合は、ラッパの中で合わせます。
    - 読み出しの遅れが1クロックでない → ラッパでは対応できないので、使う側の段数の変更が必要です(相談してください)。
    - `i_ren`=0 のときに出力を保持しない → ラッパに保持用のレジスタを追加します(使う側の LBUF と SFIFO は読み出しの次のクロックでだけ値を使うので、保持しなくても動作上は問題ありませんが、ラッパの約束どおりにしておきます)。
@@ -115,7 +132,7 @@ set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_ev_req_v_reg u_cdc
 
 ### 12.2 同期化セルの置き換え
 
-`rtl/BAYER2RGB_SYNC2.sv` の中の `BAYER2RGB_SYNC2_BHV` を、同期化専用セル(非同期リセット付き、リセット値 0)のインスタンスに書き換えます。DW は1だけを使っています。
+論理合成用のラッパ `syn/rtl/foundry/BAYER2RGB_SYNC2.sv`(雛形)のセル名と端子名を、同期化専用セル(非同期リセット付き、リセット値 0)に合わせて書き換えます。DW は1だけを使っています。合成と配置配線でこのセルを最適化しないように、同じ名前を `pd/commercial/setup/foundry_setup.tcl` の `B2R_SYNC2_CELLS` に書きます。
 
 ### 12.3 振る舞いモデル
 

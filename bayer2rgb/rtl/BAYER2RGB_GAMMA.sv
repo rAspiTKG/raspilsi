@@ -93,11 +93,18 @@ module BAYER2RGB_GAMMA
 
   // --------------------------------------------------------------------------
   // 2段目: 折れ点の選択
+  //   knot[s] と knot[s+1] を選ぶ(s = 0..35)。
+  //   添字が変数の配列読み出しは、合成ツールによっては cfg 全体のシフタになって
+  //   大きくなるので、区間番号との比較と AND-OR で選ぶ
   // --------------------------------------------------------------------------
   always_comb begin
     for( int n=0; n<NCH; n++ ) begin
-      s_k0[n] = i_cfg.gm_knot[r_seg1[n]];
-      s_k1[n] = i_cfg.gm_knot[r_seg1[n]+seg_t'(1)];
+      s_k0[n] = '0;
+      s_k1[n] = '0;
+      for( int k=0; k<GM_KNOTS-1; k++ ) begin
+        s_k0[n] = s_k0[n]|(i_cfg.gm_knot[k]&{GM_KW{r_seg1[n]==seg_t'(k)}});
+        s_k1[n] = s_k1[n]|(i_cfg.gm_knot[k+1]&{GM_KW{r_seg1[n]==seg_t'(k)}});
+      end
     end
   end
 

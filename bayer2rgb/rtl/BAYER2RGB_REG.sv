@@ -194,9 +194,15 @@ module BAYER2RGB_REG
       end
       default : begin
         if( s_gm_hit ) begin
-          s_rd[11:0] = r_gm_knot[{s_gm_idx, 1'b0}];
-          if( s_gm_idx!=5'(GM_WORDS-1) ) begin
-            s_rd[27:16] = r_gm_knot[{s_gm_idx, 1'b1}];
+          // ワード w は knot[2w](下位)と knot[2w+1](上位)。最後のワードは knot[36] だけ
+          for( int k=0; k<GM_KNOTS; k++ ) begin
+            if( s_gm_idx==5'(k/2) ) begin
+              if( (k%2)==0 ) begin
+                s_rd[11:0] = r_gm_knot[k];
+              end else begin
+                s_rd[27:16] = r_gm_knot[k];
+              end
+            end
           end
         end
       end
@@ -313,9 +319,14 @@ module BAYER2RGB_REG
         end
         default : begin
           if( s_gm_hit ) begin
-            r_gm_knot[{s_gm_idx, 1'b0}] <= s_wval[11:0];
-            if( s_gm_idx!=5'(GM_WORDS-1) ) begin
-              r_gm_knot[{s_gm_idx, 1'b1}] <= s_wval[27:16];
+            for( int k=0; k<GM_KNOTS; k++ ) begin
+              if( s_gm_idx==5'(k/2) ) begin
+                if( (k%2)==0 ) begin
+                  r_gm_knot[k] <= s_wval[11:0];
+                end else begin
+                  r_gm_knot[k] <= s_wval[27:16];
+                end
+              end
             end
           end
         end

@@ -1,0 +1,9 @@
+# ABC area script (same as OpenROAD-flow-scripts flow/scripts/abc_area.script, BSD-3-Clause)
+strash
+dch
+map -B 0.9
+topo
+stime -c
+buffer -c
+upsize -c
+dnsize -c

@@ -1,0 +1,36 @@
+# ABC speed script (same as OpenROAD-flow-scripts flow/scripts/abc_speed.script, BSD-3-Clause)
+&get -n
+&st
+&dch
+&nf
+&st
+&syn2
+&if -g -K 6
+&synch2
+&nf
+&st
+&syn2
+&if -g -K 6
+&synch2
+&nf
+&st
+&syn2
+&if -g -K 6
+&synch2
+&nf
+&st
+&syn2
+&if -g -K 6
+&synch2
+&nf
+&st
+&syn2
+&if -g -K 6
+&synch2
+&nf
+&put
+buffer -c
+topo
+stime -c
+upsize -c
+dnsize -c

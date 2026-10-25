@@ -1,0 +1,6 @@
+clk          -> ctrl_clk               終点 6
+ctrl_clk     -> clk                    終点 799
+clk_io       -> ctrl_clk ctrl_clk_io   終点 0
+ctrl_clk_io  -> clk clk_io             終点 0
+clk          -> ctrl_clk_io            終点 0
+ctrl_clk     -> clk_io                 終点 0

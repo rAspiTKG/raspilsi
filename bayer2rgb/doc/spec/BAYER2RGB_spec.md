@@ -5,7 +5,7 @@
 | IP名 | BAYER2RGB(Bayer → RGB888 変換) |
 | 版 | 1.0(VERSION レジスタ = 0x0001_0000) |
 | 日付 | 2026-10-25 |
-| 対象 | ASIC 量産品(Foundry、映像系クロック 400 MHz) |
+| 対象 | ASIC 量産品(Foundry のプロセス、映像系クロック 400 MHz) |
 | RTL | `rtl/`(SystemVerilog IEEE 1800-2017) |
 
 > この文書は `doc/tools/gen_spec.py` で `doc/spec/src/*.md` から作っています。端子表(`doc/spec/pins/`)と波形図(`doc/spec/wave/`)はRTLとシミュレーションの波形から自動で作ったものです。編集は `doc/spec/src/` に対して行ってください。
@@ -25,8 +25,9 @@
 11. [クロック乗せ換え(CDC)とタイミング制約](#11-クロック乗せ換えcdcとタイミング制約)
 12. [製品IP(SRAM・同期化セル)の扱い](#12-製品ipsram同期化セルの扱い)
 13. [検証](#13-検証)
-14. [既知の制約と注意事項](#14-既知の制約と注意事項)
-15. [参考文献](#15-参考文献)
+14. [論理合成と物理設計](#14-論理合成と物理設計)
+15. [既知の制約と注意事項](#15-既知の制約と注意事項)
+16. [参考文献](#16-参考文献)
 
 ---
 
@@ -73,7 +74,7 @@ BAYER2RGB は、メモリ上の Bayer 画像(1画素14bit、16bitに格納)を�
 
 | 項目 | 決定 | 理由・補足 |
 |---|---|---|
-| 用途 | ASIC 量産品(Foundry)、映像系 400 MHz | 製品IP(SRAM、同期化セル)はラッパで包み、シミュレーションは振る舞いモデルを使う(12章) |
+| 用途 | ASIC 量産品(Foundry のプロセス)、映像系 400 MHz | 製品IP(SRAM、同期化セル)はラッパで包み、シミュレーションは振る舞いモデルを使う(12章) |
 | 処理範囲 | デモザイクに加えて BLC、WB、ガンマを内蔵 | 前後にISPがなくても使えるようにする |
 | デモザイク方式 | バイリニア補間 + 自作のリファレンスモデル | 演算が少なく(加算とシフト)、検証を自前のモデルで閉じられる。MHC [R5] などの方式は特許の確認が必要になる [R4] |
 | 偽色対策 | エッジ部の彩度抑制(FCS) | バイリニア補間はエッジに偽色が出やすいため、エッジ量に応じて色差を縮める |
@@ -86,8 +87,9 @@ BAYER2RGB は、メモリ上の Bayer 画像(1画素14bit、16bitに格納)を�
 | クロック | `clk`/`rst_n`(映像系)と `ctrl_clk`/`ctrl_rst_n`(制御系)の2系統 | 制御系は低速のバスにつなげる。乗せ換えはハンドシェイク(11章) |
 | 1クロックの画素数 | PPC=8(既定)。1/2/4 も選べる | 4K でも書き込みの帯域で決まる速さまで処理できる。面積を減らしたいときは PPC を下げる(10章) |
 | データパスのリセット | 制御のFF(有効ビット、状態)だけリセットする | 面積と配線を減らす。データのFFとSRAMは初期化しない(検証で初期値を乱数にして確かめる) |
-| 検証 | UVM(IEEE 1800.2-2017-1.0)。Verilator 5.053 と Xcelium で動かせる構成 | 波形は GTKWave で見られる形式(Verilator: FST、Xcelium: VCD)で出す。Xcelium での実行はこの環境では未確認(14.3) |
+| 検証 | UVM(IEEE 1800.2-2017-1.0)。Verilator 5.053 と Xcelium で動かせる構成 | 波形は GTKWave で見られる形式(Verilator: FST、Xcelium: VCD)で出す。Xcelium での実行はこの環境では未確認(15.3) |
 | 合否判定 | リファレンスモデルとのビット一致 | SystemVerilog と Python の2つのモデルを持つ |
+| 論理合成・配置配線の確認 | 公開ツール(Yosys、OpenROAD-flow-scripts)と ASAP7 で、合成(PPC=8/4/2/1)と配置配線の概略配線まで(PPC=8/2)を 400 MHz で確認。Foundry のプロセスは Cadence のツールの雛形を用意 | Foundry の PDK と商用ツールがこの環境にないため。詳細配線から後はこの環境のメモリが足りないため(14章) |
 
 ## 4. ブロック構成
 
@@ -1965,6 +1967,15 @@ clk = 400 MHz のときの値です。
 - PPC を下げると CORE の演算器(DMSC、FCS、GAMMA)がほぼ PPC に比例して減ります。4K 60 fps なら PPC=2(96 fps)、4K 30 fps なら PPC=1(48 fps)で足ります。
 - SRAM の容量は PPC によらずほぼ同じです(下の表)。
 
+PPC ごとの論理合成の結果(ASAP7、WC コーナー、400 MHz。14.3。SRAM は仮マクロ):
+
+| PPC | セル数 | 面積(合計) | 標準セル | SRAM | GAMMA | FCS | DMSC | セットアップ WNS(配線なし) |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 8 | 166,032 | 26,583 um² | 18,674 um² | 7,909 um² | 6,099 um² | 3,755 um² | 2,321 um² | +0.639 ns |
+| 4 | 98,567 | 19,168 um² | 11,445 um² | 7,722 um² | 3,011 um² | 1,872 um² | 1,182 um² | +0.680 ns |
+| 2 | 65,020 | 15,584 um² | 7,955 um² | 7,629 um² | 1,558 um² | 980 um² | 606 um² | +0.637 ns |
+| 1 | 48,308 | 13,738 um² | 6,154 um² | 7,584 um² | 778 um² | 512 um² | 318 um² | +0.653 ns |
+
 ### 10.4 SRAM の一覧
 
 | 用途 | インスタンス | ワード × ビット(PPC=8) | 容量 |
@@ -2002,20 +2013,28 @@ MCP のデータ(No.3、6)は、トグルが受け側で同期化されて検出
 - No.3、6(MCP のデータ): 通常のタイミング検査から外し、データの遅れ(クロックの遅れを含めない)を受け側クロックの1周期以内に制限します。データのビットどうしのばらつきも1周期以内にします。
 - 同期化セルの1段目と2段目は近くに置きます(同期化専用セルを使う。12章)。
 
-制約の例(SDC。セル名は合成後の名前に合わせてください。`-datapath_only` が使えないツールでは、そのツールのクロックの遅れを除く指定を使ってください):
+制約は `syn/constraints/bayer2rgb.sdc` にあります(論理合成・配置配線・STA で共通。14.2)。2つのクロックの間の経路は上の表の6種類だけなので、セル名を使わず、クロックどうしの指定で書いています。`set_clock_groups -asynchronous` は遅れの上限まで消してしまうので使いません。
 
 ```tcl
-create_clock -name clk      -period 2.500  [get_ports clk]
-create_clock -name ctrl_clk -period 10.000 [get_ports ctrl_clk]
+create_clock -name clk         -period 2.500  [get_ports clk]
+create_clock -name ctrl_clk    -period 10.000 [get_ports ctrl_clk]
+# 入出力の相手(IP の外の FF)のクロック。仮想クロック(14.2)
+create_clock -name clk_io      -period 2.500
+create_clock -name ctrl_clk_io -period 10.000
 
-# No.1, 3: ctrl_clk → clk
-set_max_delay -datapath_only 2.500  -from [get_cells {u_cdc/r_req_c_reg u_cdc/r_pl_*}]  -to [get_clocks clk]
-# No.2, 5: 受け側が ctrl_clk / clk の ACK トグル
-set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_req_d_v_reg}]            -to [get_clocks ctrl_clk]
-set_max_delay -datapath_only 2.500  -from [get_cells {u_cdc/r_ev_req_d_c_reg}]         -to [get_clocks clk]
-# No.4, 6: clk → ctrl_clk
-set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_ev_req_v_reg u_cdc/r_ev_pl_v_reg*}] -to [get_clocks ctrl_clk]
+# No.1〜6: データの遅れ(クロックの遅れを含めない)を受け側の1周期以内にする
+set b2r_dom_clk  [get_clocks {clk clk_io}]
+set b2r_dom_ctrl [get_clocks {ctrl_clk ctrl_clk_io}]
+set_max_delay 2.500  -ignore_clock_latency -from $b2r_dom_ctrl -to $b2r_dom_clk
+set_max_delay 10.000 -ignore_clock_latency -from $b2r_dom_clk  -to $b2r_dom_ctrl
+# ホールドは検査しない
+set_false_path -hold -from $b2r_dom_ctrl -to $b2r_dom_clk
+set_false_path -hold -from $b2r_dom_clk  -to $b2r_dom_ctrl
 ```
+
+入出力の相手のクロック(`clk_io`、`ctrl_clk_io`)は、それぞれ `clk` 側、`ctrl_clk` 側に含めています。合成後の STA で、2つの側の間の経路の終点の数を数えています(`syn/yosys` の `reports/sta_cdc.txt`)。PPC=8/4/2/1 のすべてで、clk → ctrl_clk が 6、ctrl_clk → clk が 799(設定の受け渡しのデータとトグル)、仮想クロックと反対側のクロックの間が 0 でした。
+
+`-ignore_clock_latency` は、経路の余裕の計算からクロックの遅れ(スキュー)を除く指定です [R25]。OpenSTA(OpenROAD)で使えることを確かめています。使えないツールでは、そのツールのクロックの遅れを除く指定(例 `-datapath_only`)に置き換えてください。
 
 ### 11.3 リセット
 
@@ -2035,7 +2054,7 @@ set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_ev_req_v_reg u_cdc
 ### 12.1 SRAM の置き換え
 
 1. 10.4 の5種類の大きさ(ワード数 × ビット幅)のマクロを SRAM コンパイラで作ります。ビット幅が合わないときは、幅の広いマクロを使うか、複数個を並べます。
-2. `rtl/BAYER2RGB_SRAM_1R1W.sv` の中の `BAYER2RGB_SRAM_1R1W_BHV` を、DEPTH / DW で選んだマクロのインスタンスに書き換えます(generate で大きさごとに分ける)。
+2. 論理合成用のラッパ `syn/rtl/foundry/BAYER2RGB_SRAM_1R1W.sv`(雛形。DEPTH / DW でマクロを選ぶ generate)のマクロ名と端子名を、コンパイラの出力に合わせて書き換えます。論理合成では `rtl/` の同じ名前のファイルの代わりにこれを読みます(14章)。`rtl/` のラッパはシミュレーション用(振る舞いモデルを呼ぶ)のまま残します。
 3. マクロの性質がラッパの約束と違う場合は、ラッパの中で合わせます。
    - 読み出しの遅れが1クロックでない → ラッパでは対応できないので、使う側の段数の変更が必要です(相談してください)。
    - `i_ren`=0 のときに出力を保持しない → ラッパに保持用のレジスタを追加します(使う側の LBUF と SFIFO は読み出しの次のクロックでだけ値を使うので、保持しなくても動作上は問題ありませんが、ラッパの約束どおりにしておきます)。
@@ -2044,7 +2063,7 @@ set_max_delay -datapath_only 10.000 -from [get_cells {u_cdc/r_ev_req_v_reg u_cdc
 
 ### 12.2 同期化セルの置き換え
 
-`rtl/BAYER2RGB_SYNC2.sv` の中の `BAYER2RGB_SYNC2_BHV` を、同期化専用セル(非同期リセット付き、リセット値 0)のインスタンスに書き換えます。DW は1だけを使っています。
+論理合成用のラッパ `syn/rtl/foundry/BAYER2RGB_SYNC2.sv`(雛形)のセル名と端子名を、同期化専用セル(非同期リセット付き、リセット値 0)に合わせて書き換えます。DW は1だけを使っています。合成と配置配線でこのセルを最適化しないように、同じ名前を `pd/commercial/setup/foundry_setup.tcl` の `B2R_SYNC2_CELLS` に書きます。
 
 ### 12.3 振る舞いモデル
 
@@ -2118,12 +2137,14 @@ RTL の中にもシミュレーション専用の検査があります(`ifndef S
 | cdc | PPC=8、`BAYER2RGB_CDC_RANDOM_DELAY`(同期化の取り込みを乱数で1クロック遅らせる) | 16 |
 | 合計 | | 89 |
 
-結果(2026-10-25、Verilator 5.053、2コアのマシン):
+結果(2026-10-25、Verilator 5.053、2コアのマシン。14.3.3 の RTL の修正の後に実行):
 
 | 回帰試験 | 実行数 | 結果 | 時間(ビルドを含む) | 結果のファイル |
 |---|---:|---|---:|---|
-| `make regress` | 89 | PASS 89 / FAIL 0 | 13分27秒 | `sim/results/regress.txt` |
-| `make cov`(カバレッジ付き) | 89 | PASS 89 / FAIL 0 | 16分23秒 | `sim/results/regress_cov.txt` |
+| `make regress` | 89 | PASS 89 / FAIL 0 | 16分56秒 | `sim/results/regress.txt` |
+| `make cov`(カバレッジ付き、`JOBS=1`) | 89 | PASS 89 / FAIL 0 | 25分59秒 | `sim/results/regress_cov.txt` |
+
+時間は、論理合成・配置配線と同時に実行したときのものです(修正の前に単独で実行したときは、それぞれ 13分27秒、16分23秒)。
 
 合否は、ログに `TEST PASSED` があり、`%Error`(インタフェースの検査、RTL の検査、SRAM モデルの検査)がないことで判定しています。`make lint`(Verilator `-Wall`)の警告は PPC=8/4/2/1 のいずれも0件です(除外の設定は `rtl/bayer2rgb_lint.vlt`)。3840×2160 の1フレーム(`b2r_full_frame_test`)も一致しました。
 
@@ -2171,28 +2192,28 @@ Verilator の行カバレッジ(`--coverage-line`)を `tools/cov_summary.py` で
 | ファイル | 行 | 実行した行 | 行カバレッジ | 分岐 | 通った分岐 | 分岐カバレッジ |
 |---|---:|---:|---:|---:|---:|---:|
 | BAYER2RGB_AXIL_BRIDGE.sv | 66 | 66 | 100.0% | 26 | 26 | 100.0% |
-| BAYER2RGB_BLC.sv | 22 | 22 | 100.0% | 7 | 7 | 100.0% |
+| BAYER2RGB_BLC.sv | 30 | 30 | 100.0% | 7 | 7 | 100.0% |
 | BAYER2RGB_CDC.sv | 76 | 76 | 100.0% | 20 | 20 | 100.0% |
 | BAYER2RGB_DMSC.sv | 98 | 98 | 100.0% | 16 | 16 | 100.0% |
 | BAYER2RGB_FCS.sv | 70 | 70 | 100.0% | 22 | 22 | 100.0% |
-| BAYER2RGB_GAMMA.sv | 74 | 74 | 100.0% | 24 | 24 | 100.0% |
+| BAYER2RGB_GAMMA.sv | 77 | 77 | 100.0% | 25 | 25 | 100.0% |
 | BAYER2RGB_IN_CTRL.sv | 53 | 53 | 100.0% | 60 | 60 | 100.0% |
 | BAYER2RGB_LBUF.sv | 46 | 46 | 100.0% | 21 | 21 | 100.0% |
 | BAYER2RGB_OUT_FIFO.sv | 2 | 2 | 100.0% | 2 | 2 | 100.0% |
 | BAYER2RGB_OUT_FMT.sv | 41 | 41 | 100.0% | 11 | 11 | 100.0% |
 | BAYER2RGB_RD_DMA.sv | 82 | 82 | 100.0% | 95 | 95 | 100.0% |
-| BAYER2RGB_REG.sv | 249 | 249 | 100.0% | 46 | 46 | 100.0% |
+| BAYER2RGB_REG.sv | 255 | 255 | 100.0% | 54 | 54 | 100.0% |
 | BAYER2RGB_SFIFO.sv | 52 | 49 | 94.2% | 48 | 47 | 97.9% |
 | BAYER2RGB_SKID.sv | 18 | 18 | 100.0% | 22 | 22 | 100.0% |
-| BAYER2RGB_WB.sv | 32 | 32 | 100.0% | 12 | 12 | 100.0% |
+| BAYER2RGB_WB.sv | 40 | 40 | 100.0% | 12 | 12 | 100.0% |
 | BAYER2RGB_WR_DMA.sv | 113 | 101 | 89.4% | 129 | 117 | 90.7% |
-| 合計 | 1094 | 1079 | 98.6% | 561 | 548 | 97.7% |
+| 合計 | 1119 | 1104 | 98.7% | 570 | 557 | 97.7% |
 
 実行していない行は、どちらも動作中には到達しないものです。
 
 | ファイル | 行 | 理由 |
 |---|---|---|
-| BAYER2RGB_SFIFO.sv | 66〜69 | FF 版の `i_clr` の処理。FF 版は WR_DMA のバースト長のキューだけで使い、`i_clr` は0に固定している |
+| BAYER2RGB_SFIFO.sv | 67〜69 | FF 版の `i_clr` の処理。FF 版は WR_DMA のバースト長のキューだけで使い、`i_clr` は0に固定している |
 | BAYER2RGB_WR_DMA.sv | 26〜38 | 定数関数 `f_gcd`(パラメータの計算でエラボレーションのときだけ評価する) |
 
 トグルカバレッジは取っていません。
@@ -2201,40 +2222,62 @@ Verilator の行カバレッジ(`--coverage-line`)を `tools/cov_summary.py` で
 
 必要なもの: Verilator 5.053 以降(`--timing` と UVM が使える版)、UVM 1800.2-2017-1.0(Verilator で使える版。Verilator 向けの修正を入れたものが CHIPS Alliance から出ている [R12][R13])、FST 出力用の zlib と lz4、Python 3(numpy、Pillow)。
 
+下の表のコマンドは、全部を続けて実行するものではありません。準備のあと、目的の行を選んで実行します。
+
+準備:
+
 ```sh
 export UVM_HOME=/path/to/uvm-2017-1.0     # src/uvm_pkg.sv があるディレクトリ
 cd sim
-make lint                                  # RTL の lint(Verilator -Wall)
-make build                                 # Verilator でビルド(obj_ppc8/)
-make run TEST=b2r_smoke_test SEED=1        # 1テスト(logs/ にログ)
-make run TEST=b2r_random_test SEED=5 WAVES=1   # 波形 waves.fst → gtkwave waves.fst
-make run TEST=b2r_smoke_test PPC=4         # PPC を変える(obj_ppc4/)
-make regress                               # 回帰試験(結果は logs/regress.txt)
-make cov                                   # カバレッジ付きの回帰試験(cov/)
 ```
 
-Xcelium(このリポジトリの環境では実行していません。14章):
+| 目的 | コマンド |
+|---|---|
+| RTL の lint(Verilator -Wall) | `make lint` |
+| ビルドだけ行う(`obj_ppc8/`) | `make build` |
+| テストを1つ実行する(`logs/` にログ) | `make run TEST=b2r_smoke_test SEED=1` |
+| 波形を出して見る | `make run TEST=b2r_random_test SEED=5 WAVES=1` のあと `gtkwave waves.fst` |
+| PPC を変えて実行する(`obj_ppc4/`) | `make run TEST=b2r_smoke_test PPC=4` |
+| 回帰試験(結果は `logs/regress.txt`) | `make regress` |
+| カバレッジ付きの回帰試験(`cov/`) | `make cov` |
 
-```sh
-cd sim
-make xrun TEST=b2r_smoke_test                    # 付属の UVM(-uvmhome CDNS-1.2)[R16]
-make xrun TEST=b2r_smoke_test XWAVES=vcd         # waves.vcd を出す → gtkwave waves.vcd
-make xrun TEST=b2r_smoke_test XWAVES=shm         # waves.shm を出す(xrun_waves.tcl)[R15]
-make xrun TEST=b2r_smoke_test XUVM=$UVM_HOME     # Verilator と同じ UVM のソースを使う
-```
+`make run` は、ビルドがまだなら先にビルドします。ふつうは `make regress`(または `make cov`)を実行し、失敗したテストがあれば、そのテスト名とシードで `make run ... WAVES=1` を実行して波形を見ます。
+
+Xcelium(このリポジトリの環境では実行していません。15章)も、目的の行を選んで実行します:
+
+| 目的 | コマンド |
+|---|---|
+| 実行する(Xcelium に付属の UVM。-uvmhome CDNS-1.2)[R16] | `make xrun TEST=b2r_smoke_test` |
+| VCD の波形を出す | `make xrun TEST=b2r_smoke_test XWAVES=vcd` のあと `gtkwave waves.vcd` |
+| SHM の波形を出す(`xrun_waves.tcl`)[R15] | `make xrun TEST=b2r_smoke_test XWAVES=shm` |
+| Verilator と同じ UVM のソースを使う | `make xrun TEST=b2r_smoke_test XUVM=$UVM_HOME` |
 
 波形: Verilator は FST(`TRACE=vcd` を付けると VCD)、Xcelium は VCD(`XWAVES=vcd`)を出し、どちらも GTKWave で見られます [R17]。
 
 Python のリファレンスモデル:
 
+画像を作ってモデルで変換する(上から順に実行する):
+
 ```sh
 python3 tools/gen_image.py --size 640x480 --kind blocks --out in.raw        # 合成画像(16bit LE)
 python3 tools/b2r_model.py --in in.raw --raw-size 640x480 --crop 640x480 --out out.rgb --png out.png
-python3 tools/b2r_model.py --in in.raw --raw-size 640x480 --cfg cfg.json --out out.rgb   # 設定を JSON で与える
-python3 tools/check_dumps.py 'sim/dump/*.cfg.json'                          # +B2R_DUMP の照合
+```
+
+設定を JSON で与えるときは、2行目の代わりに次を実行します:
+
+```sh
+python3 tools/b2r_model.py --in in.raw --raw-size 640x480 --cfg cfg.json --out out.rgb
+```
+
+シミュレーションの入出力(`+B2R_DUMP`)をモデルと照合する(上とは別の使い方):
+
+```sh
+python3 tools/check_dumps.py 'sim/dump/*.cfg.json'
 ```
 
 ### 13.8 ドキュメントの作り直し
+
+上から順に実行します(ブロック図・端子表・波形図を作ってから、最後に仕様書を組み立てる)。本文(`doc/spec/src/`)だけを直したときは、最後の `gen_spec.py` だけで足ります。
 
 ```sh
 python3 doc/tools/gen_arch.py doc/arch               # ブロック図(draw.io、SVG)
@@ -2255,9 +2298,249 @@ GitHub の Markdown は WaveDrom を描画しないので、この仕様書で�
 ![wr_dma](https://svg.wavedrom.com/github/<ユーザ>/<リポジトリ>/<ブランチ>/doc/spec/wave/wr_dma.json)
 ```
 
-## 14. 既知の制約と注意事項
+## 14. 論理合成と物理設計
 
-### 14.1 機能・性能
+論理合成と配置配線の環境は2つあります。
+
+| 環境 | ツール | PDK | 状態 |
+|---|---|---|---|
+| 公開ツールの環境 | Yosys(合成)、OpenROAD-flow-scripts(配置配線)、OpenSTA | ASAP7(7nm 相当の予測 PDK)[R18][R21] | 合成と、配置配線の概略配線までをこの環境で実行した。詳細配線から後はメモリが足りず未実行(14.4.3) |
+| 商用ツールの雛形 | Cadence Genus / Innovus / Tempus / Conformal / Pegasus | Foundry の PDK | PDK とツールがないので未実行 |
+
+ASAP7 での結果は、RTL・制約・流れが通ることと、面積・タイミングのおおよその傾向を確かめるためのものです。ASAP7 は研究用の予測 PDK で、Foundry のプロセスの面積・速度・電力とは一致しません。SRAM も仮のマクロです(14.3)。
+
+### 14.1 ファイルの構成
+
+| パス | 内容 |
+|---|---|
+| `syn/constraints/bayer2rgb.sdc` | タイミング制約(合成・配置配線・STA で共通。14.2) |
+| `syn/rtl/asap7/`、`syn/rtl/foundry/` | 合成用の SRAM・同期化のラッパ(`rtl/` の同じ名前のファイルの代わりに読む。12章) |
+| `syn/yosys/` | Yosys の合成と合成後の STA(`make`)。説明は `syn/README.md` |
+| `pd/openroad/` | ORFS + ASAP7 の配置配線(`make`)。説明は `pd/README.md` |
+| `pd/commercial/` | Cadence + Foundry の PDK の雛形(`make syn pnr sta ...`) |
+| `tools/gen_sram_macro.py` | SRAM の仮マクロ(LEF、Liberty、ブラックボックス)を作る |
+
+```
+RTL(rtl/) + 合成用のラッパ(syn/rtl/<PDK>/)
+  │                          制約: syn/constraints/bayer2rgb.sdc
+  ▼
+論理合成    Yosys + ABC(syn/yosys)          │ Genus(pd/commercial/genus)
+  ▼                                          │
+配置配線    ORFS: RePlAce / TritonCTS /      │ Innovus
+            FastRoute / TritonRoute          │
+  ▼                                          │
+解析        OpenRCX + OpenSTA、IR ドロップ    │ Quantus + Tempus、Conformal、Pegasus
+```
+
+### 14.2 タイミング制約
+
+`syn/constraints/bayer2rgb.sdc` は、ポート名とクロック名だけを使う Tcl の SDC です。セル名・インスタンス名を使わないので、合成の前後やツールによらず同じファイルを読めます。値は ns / pF で書き、ライブラリの単位(`B2R_TIME_UNIT`、`B2R_CAP_UNIT`)に合わせて換算します。
+
+| 項目 | 既定値 | 変数 |
+|---|---|---|
+| clk(映像系) | 周期 2.5 ns(400 MHz) | `B2R_CLK_PERIOD` |
+| ctrl_clk(制御系) | 周期 10.0 ns(100 MHz) | `B2R_CTRL_PERIOD` |
+| クロックの不確かさ | セットアップ 0.10 ns、ホールド 0.03 ns | `B2R_UNC_SETUP`、`B2R_UNC_HOLD` |
+| クロックの遷移時間(CTS 前) | 0.05 ns | `B2R_CLK_TRAN` |
+| 入出力の相手のクロック | `clk_io`(clk と同じ周期)、`ctrl_clk_io`(ctrl_clk と同じ周期)。仮想クロック | - |
+| クロックツリーの遅れの見込み | 0 ns。clk と clk_io、ctrl_clk と ctrl_clk_io の両方に与える | `B2R_CLK_LATENCY`、`B2R_CTRL_LATENCY` |
+| AXI4 マスタ・AXI4-Lite・irq の入出力遅延 | clk_io / ctrl_clk_io から測る。最大: 周期の 50%、最小: 0 | `B2R_IO_PCT` |
+| リセット(rst_n、ctrl_rst_n) | 入力遅延(最大: 周期の 50%、最小: 0)。解除のタイミング(リカバリ・リムーバル)を検査する | `B2R_RST_PCT` |
+| 入力の遷移時間 / 出力の負荷 | 0.05 ns / 0.005 pF | `B2R_IN_TRAN`、`B2R_OUT_LOAD` |
+| clk 側 ⇔ ctrl_clk 側 | 受け側の1周期(クロックの遅れを含めない)。ホールドは検査しない(11.2) | - |
+
+変数は Tcl のグローバル変数、環境変数、既定値の順に探します。ASAP7 のライブラリは ps / fF なので、ORFS の設定(`pd/openroad/asap7/config.mk`)と `syn/yosys` で `B2R_TIME_UNIT=ps`、`B2R_CAP_UNIT=fF` を渡しています。
+
+入出力の遅延は、IP の外の FF のクロック(仮想クロック `clk_io`、`ctrl_clk_io`)から測ります。IP の外の FF も SoC の同じクロックツリーにつながっているので、クロックツリーの遅れの見込みを、IP のクロックと仮想クロックの両方に与えます。
+
+- クロックツリーを作る前(理想クロック): 両方の遅れが同じなので、見込みの値によらず同じ結果になります。
+- クロックツリーを作った後: IP の中の FF は実際の遅れ、仮想クロックは見込みの遅れのままで計算されます(仮想クロックは伝搬しない)。見込みが実際より小さいと、入力ポートから FF への経路のホールドがその差だけ厳しくなり、不要なホールド用バッファが入ります。大きすぎると、出力ポートへの経路のホールドが厳しくなります(14.4.3)。
+
+Innovus の CCOpt には、仮想クロックの遅れをクロックツリーに合わせて更新する機能(update_io_latency)があります [R27]。OpenROAD にはないので、ASAP7 の環境では、クロックツリーの後に `make io_latency` で測った値を `pd/openroad/asap7/config.mk` に書いています。
+
+### 14.3 論理合成(Yosys + ASAP7)
+
+#### 14.3.1 流れ
+
+| 段階 | 内容 |
+|---|---|
+| SRAM の仮マクロ | `tools/gen_sram_macro.py` で、使う大きさ(10.4)の 1R1W マクロの LEF・Liberty・ブラックボックスを作る(1ビット 0.06 um²、端子は左辺の M4、読み出し 0.10 + 0.012 × log2(ビット数) ns) |
+| 読み込み | sv2v で SystemVerilog を Verilog に変換して読む(`FRONTEND=slang` で yosys-slang を使うこともできる)[R19][R20] |
+| 合成 | Yosys [R22] で階層を残して合成する(`SYNTH_FLATTEN=0`)。ABC がモジュールごとに動くので、必要なメモリが少ない |
+| 割り当て | 加算器 → 全加算器・半加算器のセル、FF → ASAP7 の FF、組み合わせ回路 → ABC(面積優先のスクリプト、目標 2.5 ns) |
+| 後始末 | 定数を TIEHI / TIELO に、素通しの配線にバッファを入れる |
+| STA | OpenSTA [R26] で SDC を読み、セットアップ・ホールド・遷移時間を調べる(配線の遅れなし) |
+
+ライブラリは ASAP7 の RVT、WC コーナー(SS、0.63 V、100°C)です。ORFS の ASAP7 と同じく、駆動力の小さいセル(`*x1p*`、`*xp*`)、スキャン FF、クロックゲーティングのセルは使いません。
+
+#### 14.3.2 結果(PPC=8、400 MHz、WC)
+
+| 項目 | 値 |
+|---|---|
+| セル数 | 166,032(FF 12,485、全加算器 8,470、半加算器 7,829) |
+| 面積 | 26,583 um²(標準セル 18,674 um²、SRAM の仮マクロ 5個 7,909 um²) |
+| セットアップ(clk、配線の遅れなし) | WNS +0.639 ns(最も遅い経路は FCS の 1.747 ns、約40段) |
+| ホールド(CTS 前) | 入力ポートから・リセットの解除の検査で最大 -0.081 ns(配置配線のホールドの修正で直す) |
+| 遷移時間の違反 | 2本(ファンアウトの大きいネット。配置のバッファ挿入で直す) |
+| 合成の時間 | 約4分(CPU 1個) |
+
+モジュールごとの面積(下の階層を含めない値):
+
+| モジュール | 個数 | セル数 | 面積 [um²] | 割合 |
+|---|---:|---:|---:|---:|
+| BAYER2RGB_SRAM_1R1W(仮マクロ) | 5 | 5 | 7908.7 | 29.8% |
+| BAYER2RGB_GAMMA | 1 | 56,750 | 6099.0 | 22.9% |
+| BAYER2RGB_FCS | 1 | 37,084 | 3754.5 | 14.1% |
+| BAYER2RGB_DMSC | 1 | 21,164 | 2321.3 | 8.7% |
+| BAYER2RGB(トップ。REG、DMA、BRIDGE、IN_CTRL を含む) | 1 | 13,226 | 1842.8 | 6.9% |
+| BAYER2RGB_CDC | 1 | 7,771 | 1186.8 | 4.5% |
+| BAYER2RGB_WB | 1 | 11,408 | 1105.4 | 4.2% |
+| BAYER2RGB_SFIFO | 4 | 4,861 | 669.2 | 2.5% |
+| BAYER2RGB_LBUF | 1 | 4,714 | 613.0 | 2.3% |
+| BAYER2RGB_SKID | 5 | 4,778 | 587.3 | 2.2% |
+| BAYER2RGB_OUT_FMT | 1 | 2,397 | 277.2 | 1.0% |
+| BAYER2RGB_BLC | 1 | 1,876 | 213.3 | 0.8% |
+| BAYER2RGB_SYNC2 | 4 | 24 | 4.1 | 0.0% |
+| 合計 | | 166,032 | 26582.5 | 100.0% |
+
+sv2v はインタフェースを使うモジュール(CORE、DMA、BRIDGE など)をトップに展開するので、それらはトップの行に入っています。
+
+yosys-slang で SystemVerilog を直接読んだ場合(`make FRONTEND=slang`。元の階層のまま合成)も、セル数 167,371、面積 26,760 um²、セットアップ WNS +0.660 ns と、ほぼ同じ規模・タイミングになりました(論理の等価性までは確かめていません)。PPC=4/2/1 の合成結果は 10.3 にあります。
+
+#### 14.3.3 合成で見つけた問題と対策
+
+最初の合成では GAMMA が 26,800 um²(全体の 56%)になりました。原因は、折れ点の選択 `i_cfg.gm_knot[r_seg1[n]]` のような添字が変数の配列の読み出しです。sv2v は構造体の cfg を1本のビット列にするので、この読み出しは cfg 全体(約 800 ビット)のシフタになり、24チャネル × 2か所に入っていました。BLC・WB の色位置による選択(`i_cfg.blc[s_site[i]]`、`i_cfg.wbg[s_site[i]]`)と REG の折れ点のレジスタの読み書きも同じ形でした。
+
+これらを、添字との比較で選ぶ書き方(GAMMA は比較と AND-OR、BLC・WB は case、REG は折れ点ごとの比較)に直しました。動作は同じです(GAMMA の区間番号は 0〜35 なので、範囲外の場合は起きない)。直したあとの回帰試験は 89本すべて合格です(13.4)。
+
+| 項目 | 直す前 | 直した後 |
+|---|---:|---:|
+| セル数 | 384,911 | 166,032 |
+| 面積 | 48,057 um² | 26,583 um² |
+| GAMMA の面積 | 26,800 um² | 6,099 um² |
+| BLC の面積 | 729 um² | 213 um² |
+| 合成の時間 | 8.5 分 | 3.9 分 |
+
+Genus などの商用の合成ツールは配列の読み出しを選択回路として扱うので、ここまでの差は出ないと考えられますが、どのツールでも同じ回路になる書き方にしています。
+
+### 14.4 配置配線(OpenROAD-flow-scripts + ASAP7)
+
+#### 14.4.1 流れと設定
+
+OpenROAD-flow-scripts(ORFS)[R18][R24] の流れに、14.3 のネットリストと共通の SDC をそのまま渡します(ORFS の中では合成しない)。ツールは OpenROAD [R23] です。
+
+| 段階 | 内容 | 主な設定 |
+|---|---|---|
+| フロアプラン | コアの大きさ、端子の配置、SRAM マクロの配置、タップセル、電源配線 | 使用率 30%、正方形。端子は上辺と下辺。電源は M1/M2 のレールと M5/M6 のストライプ(マクロは M4–M5 で接続) |
+| 配置 | タイミングと配線の混み具合を見た配置、バッファ挿入・サイズ変更、詳細配置 | 配置の密度 0.42 |
+| CTS | clk と ctrl_clk のクロックツリー、ホールドの修正 | 違反した終点をすべて直す(`TNS_END_PERCENT=100`) |
+| 入出力の遅れの確認 | CTS の後に、入出力につながる FF のクロックの遅れを測る(`make io_latency`) | 測った値を `asap7/config.mk` の表に書く(14.2) |
+| 概略配線 | 概略配線(FastRoute)と、配線の見積もりを使ったタイミング・遷移時間の修正 | 配線層 M2〜M7。概略配線の容量の差し引き 0.3 |
+| 詳細配線 | 詳細配線(TritonRoute)、フィラー | (この環境では未実行。14.4.3) |
+| 最終 | 寄生抽出(OpenRCX)、STA、電力、IR ドロップ | WC コーナー(SS、0.63 V、100°C)(この環境では未実行) |
+
+SRAM マクロは、面積の大きい順にコアの左端の列へ下から積み、入らなくなったら右端の列へ積みます(`pd/openroad/asap7/macro_place.tcl`)。マクロの端子は左辺にあるので、左の列は左右を反転して端子をコアの内側へ向けます。
+
+#### 14.4.2 結果(400 MHz、WC コーナー、概略配線の後)
+
+PPC=8 と PPC=2 を概略配線まで実行しました。タイミングは、概略配線の結果から見積もった配線の遅れを含みます。詳細配線から後は、この環境のメモリでは実行できませんでした(14.4.3)。各段階の値は `pd/openroad/results/asap7_ppc<PPC>/summary.md` にあります。
+
+| 項目 | PPC=8 | PPC=2 |
+|---|---:|---:|
+| ダイの大きさ | 301.7 × 301.7 um | 231.9 × 231.9 um |
+| セル数(概略配線の後) | 182,326 | 77,087 |
+| セルの面積(標準セル + SRAM) | 30,310 um²(22,401 + 7,909) | 17,006 um²(9,377 + 7,629) |
+| コアの使用率 | 34.3% | 32.8% |
+| セットアップ WNS / TNS | +2.0 ps / 0 | +3.9 ps / 0 |
+| ホールド違反 | 0 | 0 |
+| CTS で入れたホールド用バッファ | 1 | 125 |
+| clk のクロックの遅れ(入出力につながる FF の中央値) | 0.499 ns | 0.396 ns |
+| clk のスキュー(セットアップ / ホールド) | 193.2 / 116.1 ps | 177.3 / 117.6 ps |
+| 遷移時間の違反 | 5 | 0 |
+| 配線長(概略配線) | 1,857,903 um | 486,830 um |
+| 電力(見積もり) | 365.0 mW | 148.1 mW |
+| 実行時間(フロアプラン〜概略配線、CPU 2個) | 37.9 分 | 12.0 分 |
+
+![PPC=8 の配置(概略配線の後)](../../pd/openroad/results/asap7_ppc8/layout.png)
+
+![PPC=2 の配置(概略配線の後)](../../pd/openroad/results/asap7_ppc2/layout.png)
+
+黄色が SRAM の仮マクロ、青が標準セルの密度、赤が端子です。マクロはコアの左右の端に積んでいます(14.4.1)。
+
+#### 14.4.3 わかったこと
+
+**入出力のクロックの遅れ(14.2)**
+
+最初は入出力の遅延を IP のクロック(clk、ctrl_clk)から測っていました。この場合、入力ポートのデータとリセットは遅れのないクロックで出たことになり、CTS の後は IP の中の FF のクロックだけが、クロックツリーの遅れ(PPC=8 で約 0.5 ns)の分だけ遅れます。その結果、
+
+- 入力ポートから FF への経路と、リセットの解除のリムーバル(ホールドと同じ向きの検査)が約 0.5 ns 足りなくなり、CTS のホールドの修正で 3,995 個のバッファが入りました(修正の前に違反していた終点 1,934、最大 -504 ps)。リセットの根元にも、約 0.5 ns 分のバッファの列が入りました。
+- 逆に、入力ポートからの経路のセットアップと、リセットのリカバリは約 0.5 ns 甘く計算されていました。
+
+SoC に組み込むと IP の外の FF も同じクロックツリーから来るので、これらのバッファは要りません。入出力の遅延を仮想クロックから測るように SDC を直し、仮想クロックの遅れを `make io_latency` で測った値にしました。
+
+| 項目 | PPC=8 直す前(遅れ 0) | PPC=8 直した後 | PPC=2 見込みの値 | PPC=2 実測の値 |
+|---|---:|---:|---:|---:|
+| 仮想クロックの遅れ(clk / ctrl_clk) | 0 / 0 ns | 0.50 / 0.23 ns | 0.45 / 0.23 ns | 0.40 / 0.20 ns |
+| CTS のホールドの修正の前に違反していた終点 | 1,934 | 1 | 0 | 237 |
+| CTS で入れたホールド用バッファ | 3,995 | 1 | 0 | 125 |
+| 概略配線の後のセル数 | 186,315 | 182,326 | 76,966 | 77,087 |
+| 概略配線の後のセットアップ WNS(リセットのリカバリを含む) | +39.8 ps | +2.0 ps | -19.9 ps | +3.9 ps |
+
+PPC=8 の直した後の WNS(+2.0 ps)は、直す前(+39.8 ps)より小さくなっていますが、直す前はリセットのリカバリが甘く計算されていたためで、直した後の方が実際に近い値です。PPC=2 は、はじめに見込みの値(0.45 / 0.23 ns)で流し、CTS の後に測った値(入出力につながる FF の中央値 0.395 / 0.200 ns)で流し直しました。見込みの値が実際より約 55 ps 大きかったので、ホールドの修正は 0 でしたが、リセットのリカバリが約 55 ps 厳しくなり、概略配線の後に 12 個の終点で違反しました。
+
+**リセットの解除の検査**
+
+概略配線の後で最も余裕が小さいのは、rst_n から FF の非同期リセット端子へのリカバリの検査です。リセットは IP の全体の制御の FF に広がるので、リセットの配線に 10段ほどのバッファが入り、遅れが 1 ns 程度になります。SDC はリセットの入力遅延を周期の 50% にしているので(`B2R_RST_PCT`)、IP の中に残るのは 1.25 ns です。IP の外の同期化の FF を IP の近くに置けるなら `B2R_RST_PCT` を小さくできます。商用の流れでも、ファンアウトの大きいリセットの配線へのバッファの入れ方を確認してください。
+
+**配線の混み具合(GAMMA)**
+
+最初の設定(使用率 40%、配置の密度 0.60)では、PPC=8 の概略配線が収束しませんでした(混んだ格子が 2万か所以上。ほとんどが GAMMA のまわり)。GAMMA は 24チャネル(8画素 × 3色)のそれぞれが 37個の折れ点(12 bit)から2つを選ぶので、折れ点のレジスタから多くの選択回路へ配線が広がります。使用率 30%、配置の密度 0.42、概略配線の容量の差し引き 0.3 にして、あふれが 0 になりました。
+
+**詳細配線のメモリ**
+
+詳細配線(TritonRoute)は、この環境(作業用のメモリの上限 約 6 GB、スワップ 8 GB、CPU 2個)では、どちらの PPC も途中でメモリ不足になり、OS に止められました(上の表の「直す前」と「見込みの値」のデータで試した。メモリの量は制約によらない)。
+
+| | PPC=8 | PPC=2 |
+|---|---|---|
+| 止まった所 | 1回目の繰り返しの 10〜20%(開始から 31.5 分。端子の取り付けに 24 分) | 1回目の繰り返しの 70〜80%(開始から 34 分。端子の取り付けに 11 分) |
+| そのときのメモリ + スワップ | 約 14 GB | 約 12 GB(2回試した) |
+
+glibc の割り当ての設定(`MALLOC_ARENA_MAX=2`)を変えても同じでした。詳細配線から後(`make route final`)は、32 GB 以上のメモリの計算機で実行してください。
+
+**遷移時間の違反**
+
+概略配線の後の遷移時間の違反は、PPC=8 で 5本(GAMMA の中。324 ps、制限 320 ps)、PPC=2 で 0本でした。直す前の PPC=8 では 46本(GAMMA の中。最大 386 ps)、見込みの値の PPC=2 では 24本(リセットの配線。最大 367 ps)ありました。
+
+### 14.5 商用ツールの雛形(Cadence + Foundry の PDK)
+
+`pd/commercial/` に、Foundry の PDK と Cadence のツールで流すためのスクリプトを置いています。PDK の中身(ファイル名、セル名、層の名前、電源の作り方)は公開されていないので、`<...>` の項目を記入して使います。コマンドは Stylus Common UI を想定していますが、この環境では実行していません。
+
+| ファイル | 内容 |
+|---|---|
+| `setup/foundry_setup.tcl` | PDK のパス、ライブラリ(コーナーごと)、qrcTechFile、解析ビュー、セル名、配線層(記入する) |
+| `setup/design_setup.tcl`、`setup/mmmc.tcl` | 設計の設定、MMMC(Genus / Innovus / Tempus で共通) |
+| `genus/syn.tcl` | 合成。ネットリスト、数値に展開した SDC、LEC の dofile を出す |
+| `innovus/*.tcl` | init → floorplan → place → cts → route → signoff(段階ごとに db を保存) |
+| `tempus/sta.tcl` | サインオフの STA(全ビュー、SI、CDC の経路、SDF) |
+| `lec/gate2gate.do` | 合成後と配置配線後の等価性検証 |
+| `syn/rtl/foundry/` | SRAM・同期化のラッパ(マクロ名・セル名を記入する) |
+
+電源配線の作り方はプロセスによって違うので、雛形では PDK のリファレンスフローの電源配線のスクリプトを読むだけにしています(`B2R_PDN_TCL`)。
+
+ラッパの雛形は、仮のモデル(`syn/rtl/foundry/B2R_FOUNDRY_STUB.sv`)と合わせて Verilator の lint(-Wall)を通しています(PPC=8/4/2/1、警告 0)。
+
+### 14.6 注意
+
+- ASAP7 の SRAM は仮マクロです。外形・端子・遅れは見積もりで、GDS もありません。Foundry のプロセスでは、メモリコンパイラのマクロの大きさ・端子の位置・遅れでやり直してください。
+- ASAP7 の合成では同期化を FF 2段(`keep` 属性)で作っています。量産では同期化専用セルを使います(12.2)。
+- この環境の OpenROAD は GUI の部品(Qt Charts)がないので、ORFS の最後の画像保存を止める設定にしています(`final_report.tcl` の `save_image`)。配置の図は DEF から描いています(`pd/openroad/scripts/plot_layout.py`)。
+- 詳細配線から後(`make route final`)は、この環境のメモリでは実行できませんでした(14.4.3)。ORFS の手順の名前(`do-5_2_route` など)は、使った版の ORFS の Makefile と同じであることを確かめています。
+- この版の OpenROAD の自動マクロ配置(RTL-MP)は、階層つきのネットリストで異常終了しました。マクロは `pd/openroad/asap7/macro_place.tcl` の規則で置いています。
+- DFT(スキャン、メモリ BIST)は入れていません。商用の流れでは Genus / Modus で入れます。
+
+## 15. 既知の制約と注意事項
+
+### 15.1 機能・性能
 
 - 幅は8の倍数、高さは偶数です(それ以外の設定値は切り捨て)。最小は 16×16 です。
 - 入力と出力の領域を重ねた変換(同じバッファでの変換)はできません。
@@ -2266,21 +2549,24 @@ GitHub の Markdown は WaveDrom を描画しないので、この仕様書で�
 - エラー応答を受けても処理は続けます。エラーの起きたアドレスは記録しません。
 - 割り込みはレベル出力です。エッジで受けるシステムでは、IRQ_STATUS をクリアしてから次の要因で再び立ちます。
 
-### 14.2 実装
+### 15.2 実装
 
-- 論理合成と静的タイミング解析(Foundry、400 MHz)はまだ行っていません。乗算のある段(WB: 14×16bit、FCS: 14×8bit と 15×9bit、GAMMA: 13×11bit)は、乗算と加算・丸めを別の段に分けて 400 MHz を狙った構成にしていますが、合成で確認が必要です。
-- SRAM マクロと同期化セルは振る舞いモデルのままです。量産の前に 12章の手順で置き換えてください。
+- Foundry のプロセスでの論理合成・配置配線・STA はまだ行っていません(PDK と商用ツールがないため。雛形は 14.5)。ASAP7 では 400 MHz(WC コーナー)で、合成(PPC=8/4/2/1)と、配置配線の概略配線まで(PPC=8/2)を通しました(14.3、14.4)。詳細配線・寄生抽出・配線後の STA・IR ドロップは、この環境のメモリが足りず実行していません。ASAP7 の結果は傾向を見るためのもので、Foundry のプロセスの値ではありません。
+- SRAM マクロと同期化セルは、シミュレーションでは振る舞いモデル、ASAP7 の合成では仮マクロと FF 2段です。量産の前に 12章の手順で Foundry の製品IPに置き換えてください。
 - CDC の制約(11.2)を必ず入れてください。CDC 検証ツールでの確認はしていません。
+- PPC=8 では、GAMMA の折れ点の選択(24チャネル × 2か所 × 37個の中から選ぶ)に配線が集中します。ASAP7 では使用率 40%・配置の密度 0.60 で概略配線が収束せず、30% / 0.42 に下げました(14.4)。量産の配置配線でも GAMMA のまわりの配置の密度を下げてください(Innovus の部分的な配置ブロッケージなど)。
+- 配置配線の後で最も余裕が小さいのは、リセットの解除(rst_n のリカバリ)です(ASAP7 の概略配線の後で PPC=8 が +2.0 ps、PPC=2 が +3.9 ps)。リセットは IP の全体の制御の FF に広がるので、配線のバッファで 1 ns 程度遅れます。SoC に組み込むときは、リセットの同期化の FF を IP の近くに置く(SDC の `B2R_RST_PCT` を小さくできる)か、リセットの配線へのバッファの入れ方を見直してください(14.4.3)。
+- 入出力の遅延は仮想クロック(`clk_io`、`ctrl_clk_io`)から測ります。CTS の後は、仮想クロックの遅れを実際のクロックツリーの遅れに合わせてください(Innovus の update_io_latency、ASAP7 の環境の `make io_latency`。14.2)。
 - DFT(スキャン、メモリ BIST)と低消費電力の機能(クロックゲーティング、電源遮断)は入れていません(ツールで挿入する前提)。
 - RTL と検証環境のコメントは UTF-8 の日本語です。
 
-### 14.3 検証
+### 15.3 検証
 
 - 回帰試験とカバレッジは Verilator で行いました。Xcelium 用の Makefile と波形の設定は用意していますが、この環境では Xcelium を実行していません(ライセンスがない)。
 - Verilator では UVM を `UVM_NO_DPI` で使っています(正規表現を使う機能は使っていません)。
 - 機能カバレッジは、Verilator の covergroup の集計とは別に、同じビンを名前で数えてログに出し、`tools/merge_cov.py` でまとめています。Xcelium では covergroup の結果を IMC でまとめられます。
 
-## 15. 参考文献
+## 16. 参考文献
 
 | No | 文献 | 使ったところ |
 |---|---|---|
@@ -2301,3 +2587,13 @@ GitHub の Markdown は WaveDrom を描画しないので、この仕様書で�
 | R15 | [Cadence Community: xrun dump all internal signals](https://community.cadence.com/cadence_technology_forums/f/functional-verification/57941/xrun-dump-all-internal-signals) | Xcelium の波形(database / probe) |
 | R16 | [OpenTitan: xcelium.hjson](https://opensecura.googlesource.com/3p/lowrisc/opentitan/+/4a6b06b28416dbb335099ead987c909e31403d78/hw/dv/data/xcelium/xcelium.hjson) | Xcelium の UVM 指定(-uvmhome CDNS-1.2) |
 | R17 | [cocotb: Simulator Support](https://docs.cocotb.org/en/latest/simulator_support.html) / [GTKWave(Flathub)](https://flathub.org/apps/io.github.gtkwave.GTKWave) | Verilator の FST 出力と GTKWave |
+| R18 | [OpenROAD-flow-scripts(GitHub)](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts) | 配置配線の流れ、ASAP7 のプラットフォーム(14章) |
+| R19 | [sv2v(GitHub)](https://github.com/zachjs/sv2v) | SystemVerilog → Verilog の変換(14.3) |
+| R20 | [yosys-slang(GitHub)](https://github.com/povik/yosys-slang) | Yosys で SystemVerilog を直接読む(14.3) |
+| R21 | [ASAP7 PDK(GitHub)](https://github.com/The-OpenROAD-Project/asap7) | 7nm 相当の予測 PDK とセルライブラリ(14章) |
+| R22 | [Yosys(GitHub)](https://github.com/YosysHQ/yosys) | 論理合成(14.3) |
+| R23 | [OpenROAD(GitHub)](https://github.com/The-OpenROAD-Project/OpenROAD) | 配置配線のツール(14.4) |
+| R24 | [OpenROAD-flow-scripts: Flow Variables](https://openroad-flow-scripts.readthedocs.io/en/latest/user/FlowVariables.html) | ORFS の変数(14.4) |
+| R25 | [Microchip: set_max_delay(SDC)](https://onlinedocs.microchip.com/oxy/GUID-AFCB5DCC-964F-4BE7-AA46-C756FA87ED7B-en-US-21/GUID-CDCFAAE7-BB67-4F0A-9E54-88F759325E05.html) | `-ignore_clock_latency` の意味(11.2) |
+| R26 | [OpenSTA(GitHub)](https://github.com/parallaxsw/OpenSTA) | 静的タイミング解析(14.3、14.4) |
+| R27 | [Cadence Community: Propagated clock for reg2out](https://community.cadence.com/cadence_technology_forums/f/digital-implementation/27219/propagated-clock-for-reg2out) | 入出力の遅延を仮想クロックから測る方法と、CTS の後の update_io_latency(14.2) |

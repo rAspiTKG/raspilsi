@@ -33,7 +33,21 @@ module BAYER2RGB_WB
     for( int i=0; i<PPC; i++ ) begin
       s_site[i] = f_site(i_cfg.phase, i_stp.line[0], f_xpar(i_stp.col[0], 1'(i)));
       if( i_cfg.wb_en ) begin
-        s_gain[i] = i_cfg.wbg[s_site[i]];
+        // 色位置でゲインを選ぶ(添字が変数の配列読み出しにしない)
+        case( s_site[i] )
+          2'd0 : begin
+            s_gain[i] = i_cfg.wbg[0];
+          end
+          2'd1 : begin
+            s_gain[i] = i_cfg.wbg[1];
+          end
+          2'd2 : begin
+            s_gain[i] = i_cfg.wbg[2];
+          end
+          default : begin
+            s_gain[i] = i_cfg.wbg[3];
+          end
+        endcase
       end else begin
         s_gain[i] = WBG_W'(1<<WBG_FRAC);
       end

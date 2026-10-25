@@ -63,12 +63,14 @@ RTL の中にもシミュレーション専用の検査があります(`ifndef S
 | cdc | PPC=8、`BAYER2RGB_CDC_RANDOM_DELAY`(同期化の取り込みを乱数で1クロック遅らせる) | 16 |
 | 合計 | | 89 |
 
-結果(2026-10-25、Verilator 5.053、2コアのマシン):
+結果(2026-10-25、Verilator 5.053、2コアのマシン。14.3.3 の RTL の修正の後に実行):
 
 | 回帰試験 | 実行数 | 結果 | 時間(ビルドを含む) | 結果のファイル |
 |---|---:|---|---:|---|
-| `make regress` | 89 | PASS 89 / FAIL 0 | 13分27秒 | `sim/results/regress.txt` |
-| `make cov`(カバレッジ付き) | 89 | PASS 89 / FAIL 0 | 16分23秒 | `sim/results/regress_cov.txt` |
+| `make regress` | 89 | PASS 89 / FAIL 0 | 16分56秒 | `sim/results/regress.txt` |
+| `make cov`(カバレッジ付き、`JOBS=1`) | 89 | PASS 89 / FAIL 0 | 25分59秒 | `sim/results/regress_cov.txt` |
+
+時間は、論理合成・配置配線と同時に実行したときのものです(修正の前に単独で実行したときは、それぞれ 13分27秒、16分23秒)。
 
 合否は、ログに `TEST PASSED` があり、`%Error`(インタフェースの検査、RTL の検査、SRAM モデルの検査)がないことで判定しています。`make lint`(Verilator `-Wall`)の警告は PPC=8/4/2/1 のいずれも0件です(除外の設定は `rtl/bayer2rgb_lint.vlt`)。3840×2160 の1フレーム(`b2r_full_frame_test`)も一致しました。
 
@@ -116,28 +118,28 @@ Verilator の行カバレッジ(`--coverage-line`)を `tools/cov_summary.py` で
 | ファイル | 行 | 実行した行 | 行カバレッジ | 分岐 | 通った分岐 | 分岐カバレッジ |
 |---|---:|---:|---:|---:|---:|---:|
 | BAYER2RGB_AXIL_BRIDGE.sv | 66 | 66 | 100.0% | 26 | 26 | 100.0% |
-| BAYER2RGB_BLC.sv | 22 | 22 | 100.0% | 7 | 7 | 100.0% |
+| BAYER2RGB_BLC.sv | 30 | 30 | 100.0% | 7 | 7 | 100.0% |
 | BAYER2RGB_CDC.sv | 76 | 76 | 100.0% | 20 | 20 | 100.0% |
 | BAYER2RGB_DMSC.sv | 98 | 98 | 100.0% | 16 | 16 | 100.0% |
 | BAYER2RGB_FCS.sv | 70 | 70 | 100.0% | 22 | 22 | 100.0% |
-| BAYER2RGB_GAMMA.sv | 74 | 74 | 100.0% | 24 | 24 | 100.0% |
+| BAYER2RGB_GAMMA.sv | 77 | 77 | 100.0% | 25 | 25 | 100.0% |
 | BAYER2RGB_IN_CTRL.sv | 53 | 53 | 100.0% | 60 | 60 | 100.0% |
 | BAYER2RGB_LBUF.sv | 46 | 46 | 100.0% | 21 | 21 | 100.0% |
 | BAYER2RGB_OUT_FIFO.sv | 2 | 2 | 100.0% | 2 | 2 | 100.0% |
 | BAYER2RGB_OUT_FMT.sv | 41 | 41 | 100.0% | 11 | 11 | 100.0% |
 | BAYER2RGB_RD_DMA.sv | 82 | 82 | 100.0% | 95 | 95 | 100.0% |
-| BAYER2RGB_REG.sv | 249 | 249 | 100.0% | 46 | 46 | 100.0% |
+| BAYER2RGB_REG.sv | 255 | 255 | 100.0% | 54 | 54 | 100.0% |
 | BAYER2RGB_SFIFO.sv | 52 | 49 | 94.2% | 48 | 47 | 97.9% |
 | BAYER2RGB_SKID.sv | 18 | 18 | 100.0% | 22 | 22 | 100.0% |
-| BAYER2RGB_WB.sv | 32 | 32 | 100.0% | 12 | 12 | 100.0% |
+| BAYER2RGB_WB.sv | 40 | 40 | 100.0% | 12 | 12 | 100.0% |
 | BAYER2RGB_WR_DMA.sv | 113 | 101 | 89.4% | 129 | 117 | 90.7% |
-| 合計 | 1094 | 1079 | 98.6% | 561 | 548 | 97.7% |
+| 合計 | 1119 | 1104 | 98.7% | 570 | 557 | 97.7% |
 
 実行していない行は、どちらも動作中には到達しないものです。
 
 | ファイル | 行 | 理由 |
 |---|---|---|
-| BAYER2RGB_SFIFO.sv | 66〜69 | FF 版の `i_clr` の処理。FF 版は WR_DMA のバースト長のキューだけで使い、`i_clr` は0に固定している |
+| BAYER2RGB_SFIFO.sv | 67〜69 | FF 版の `i_clr` の処理。FF 版は WR_DMA のバースト長のキューだけで使い、`i_clr` は0に固定している |
 | BAYER2RGB_WR_DMA.sv | 26〜38 | 定数関数 `f_gcd`(パラメータの計算でエラボレーションのときだけ評価する) |
 
 トグルカバレッジは取っていません。
@@ -146,40 +148,62 @@ Verilator の行カバレッジ(`--coverage-line`)を `tools/cov_summary.py` で
 
 必要なもの: Verilator 5.053 以降(`--timing` と UVM が使える版)、UVM 1800.2-2017-1.0(Verilator で使える版。Verilator 向けの修正を入れたものが CHIPS Alliance から出ている [R12][R13])、FST 出力用の zlib と lz4、Python 3(numpy、Pillow)。
 
+下の表のコマンドは、全部を続けて実行するものではありません。準備のあと、目的の行を選んで実行します。
+
+準備:
+
 ```sh
 export UVM_HOME=/path/to/uvm-2017-1.0     # src/uvm_pkg.sv があるディレクトリ
 cd sim
-make lint                                  # RTL の lint(Verilator -Wall)
-make build                                 # Verilator でビルド(obj_ppc8/)
-make run TEST=b2r_smoke_test SEED=1        # 1テスト(logs/ にログ)
-make run TEST=b2r_random_test SEED=5 WAVES=1   # 波形 waves.fst → gtkwave waves.fst
-make run TEST=b2r_smoke_test PPC=4         # PPC を変える(obj_ppc4/)
-make regress                               # 回帰試験(結果は logs/regress.txt)
-make cov                                   # カバレッジ付きの回帰試験(cov/)
 ```
 
-Xcelium(このリポジトリの環境では実行していません。14章):
+| 目的 | コマンド |
+|---|---|
+| RTL の lint(Verilator -Wall) | `make lint` |
+| ビルドだけ行う(`obj_ppc8/`) | `make build` |
+| テストを1つ実行する(`logs/` にログ) | `make run TEST=b2r_smoke_test SEED=1` |
+| 波形を出して見る | `make run TEST=b2r_random_test SEED=5 WAVES=1` のあと `gtkwave waves.fst` |
+| PPC を変えて実行する(`obj_ppc4/`) | `make run TEST=b2r_smoke_test PPC=4` |
+| 回帰試験(結果は `logs/regress.txt`) | `make regress` |
+| カバレッジ付きの回帰試験(`cov/`) | `make cov` |
 
-```sh
-cd sim
-make xrun TEST=b2r_smoke_test                    # 付属の UVM(-uvmhome CDNS-1.2)[R16]
-make xrun TEST=b2r_smoke_test XWAVES=vcd         # waves.vcd を出す → gtkwave waves.vcd
-make xrun TEST=b2r_smoke_test XWAVES=shm         # waves.shm を出す(xrun_waves.tcl)[R15]
-make xrun TEST=b2r_smoke_test XUVM=$UVM_HOME     # Verilator と同じ UVM のソースを使う
-```
+`make run` は、ビルドがまだなら先にビルドします。ふつうは `make regress`(または `make cov`)を実行し、失敗したテストがあれば、そのテスト名とシードで `make run ... WAVES=1` を実行して波形を見ます。
+
+Xcelium(このリポジトリの環境では実行していません。15章)も、目的の行を選んで実行します:
+
+| 目的 | コマンド |
+|---|---|
+| 実行する(Xcelium に付属の UVM。-uvmhome CDNS-1.2)[R16] | `make xrun TEST=b2r_smoke_test` |
+| VCD の波形を出す | `make xrun TEST=b2r_smoke_test XWAVES=vcd` のあと `gtkwave waves.vcd` |
+| SHM の波形を出す(`xrun_waves.tcl`)[R15] | `make xrun TEST=b2r_smoke_test XWAVES=shm` |
+| Verilator と同じ UVM のソースを使う | `make xrun TEST=b2r_smoke_test XUVM=$UVM_HOME` |
 
 波形: Verilator は FST(`TRACE=vcd` を付けると VCD)、Xcelium は VCD(`XWAVES=vcd`)を出し、どちらも GTKWave で見られます [R17]。
 
 Python のリファレンスモデル:
 
+画像を作ってモデルで変換する(上から順に実行する):
+
 ```sh
 python3 tools/gen_image.py --size 640x480 --kind blocks --out in.raw        # 合成画像(16bit LE)
 python3 tools/b2r_model.py --in in.raw --raw-size 640x480 --crop 640x480 --out out.rgb --png out.png
-python3 tools/b2r_model.py --in in.raw --raw-size 640x480 --cfg cfg.json --out out.rgb   # 設定を JSON で与える
-python3 tools/check_dumps.py 'sim/dump/*.cfg.json'                          # +B2R_DUMP の照合
+```
+
+設定を JSON で与えるときは、2行目の代わりに次を実行します:
+
+```sh
+python3 tools/b2r_model.py --in in.raw --raw-size 640x480 --cfg cfg.json --out out.rgb
+```
+
+シミュレーションの入出力(`+B2R_DUMP`)をモデルと照合する(上とは別の使い方):
+
+```sh
+python3 tools/check_dumps.py 'sim/dump/*.cfg.json'
 ```
 
 ### 13.8 ドキュメントの作り直し
+
+上から順に実行します(ブロック図・端子表・波形図を作ってから、最後に仕様書を組み立てる)。本文(`doc/spec/src/`)だけを直したときは、最後の `gen_spec.py` だけで足ります。
 
 ```sh
 python3 doc/tools/gen_arch.py doc/arch               # ブロック図(draw.io、SVG)
