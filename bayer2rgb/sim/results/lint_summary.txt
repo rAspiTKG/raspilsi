@@ -1,0 +1,4 @@
+PPC=8: %Warning 0 件, %Error 0 件
+PPC=4: %Warning 0 件, %Error 0 件
+PPC=2: %Warning 0 件, %Error 0 件
+PPC=1: %Warning 0 件, %Error 0 件

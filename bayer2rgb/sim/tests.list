@@ -1,0 +1,37 @@
+# ============================================================================
+# 回帰試験の一覧(run_regress.sh が読む)
+#   書式: <ビルド> <テスト名> <シードの数> [プラスアーグ ...]
+#   ビルド: ppc8 / ppc4 / ppc2 / ppc1 / cdc(PPC=8 + 同期化セルの乱数遅延)
+#   # から行末まではコメント
+# ============================================================================
+ppc8 b2r_reg_test          2
+ppc8 b2r_smoke_test        3
+ppc8 b2r_phase_test        2
+ppc8 b2r_func_test         3
+ppc8 b2r_bypass_test       2
+ppc8 b2r_tpg_test          2
+ppc8 b2r_size_test         2
+ppc8 b2r_stress_test       3
+ppc8 b2r_4kb_test          3
+ppc8 b2r_auto_restart_test 3
+ppc8 b2r_error_test        3
+ppc8 b2r_sw_reset_test     5
+ppc8 b2r_ctrl_test         3
+ppc8 b2r_random_test       10
+ppc8 b2r_random_test       3  +CLK_PS=2000 +CTRL_CLK_PS=21000
+ppc8 b2r_random_test       3  +CLK_PS=10000 +CTRL_CLK_PS=2500
+ppc8 b2r_random_test       2  +B2R_WMAX=1024 +B2R_HMAX=64
+ppc8 b2r_full_frame_test   1
+ppc8 b2r_wave_test         1
+ppc4 b2r_smoke_test        2
+ppc4 b2r_size_test         1
+ppc4 b2r_random_test       4
+ppc2 b2r_smoke_test        2
+ppc2 b2r_random_test       3
+ppc1 b2r_smoke_test        2
+ppc1 b2r_random_test       3
+cdc  b2r_random_test       4  +CLK_PS=2500 +CTRL_CLK_PS=7000
+cdc  b2r_random_test       3  +CLK_PS=9000 +CTRL_CLK_PS=3000
+cdc  b2r_sw_reset_test     4  +CLK_PS=3000 +CTRL_CLK_PS=11000
+cdc  b2r_auto_restart_test 3  +CLK_PS=2500 +CTRL_CLK_PS=9000
+cdc  b2r_ctrl_test         2  +CLK_PS=7000 +CTRL_CLK_PS=2500

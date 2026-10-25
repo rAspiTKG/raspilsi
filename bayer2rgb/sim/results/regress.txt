@@ -1,0 +1,89 @@
+PASS cdc b2r_auto_restart_test seed=3001 +CLK_PS=2500 +CTRL_CLK_PS=9000
+PASS cdc b2r_auto_restart_test seed=3002 +CLK_PS=2500 +CTRL_CLK_PS=9000
+PASS cdc b2r_auto_restart_test seed=3003 +CLK_PS=2500 +CTRL_CLK_PS=9000
+PASS cdc b2r_ctrl_test seed=3101 +CLK_PS=7000 +CTRL_CLK_PS=2500
+PASS cdc b2r_ctrl_test seed=3102 +CLK_PS=7000 +CTRL_CLK_PS=2500
+PASS cdc b2r_random_test seed=2701 +CLK_PS=2500 +CTRL_CLK_PS=7000
+PASS cdc b2r_random_test seed=2702 +CLK_PS=2500 +CTRL_CLK_PS=7000
+PASS cdc b2r_random_test seed=2703 +CLK_PS=2500 +CTRL_CLK_PS=7000
+PASS cdc b2r_random_test seed=2704 +CLK_PS=2500 +CTRL_CLK_PS=7000
+PASS cdc b2r_random_test seed=2801 +CLK_PS=9000 +CTRL_CLK_PS=3000
+PASS cdc b2r_random_test seed=2802 +CLK_PS=9000 +CTRL_CLK_PS=3000
+PASS cdc b2r_random_test seed=2803 +CLK_PS=9000 +CTRL_CLK_PS=3000
+PASS cdc b2r_sw_reset_test seed=2901 +CLK_PS=3000 +CTRL_CLK_PS=11000
+PASS cdc b2r_sw_reset_test seed=2902 +CLK_PS=3000 +CTRL_CLK_PS=11000
+PASS cdc b2r_sw_reset_test seed=2903 +CLK_PS=3000 +CTRL_CLK_PS=11000
+PASS cdc b2r_sw_reset_test seed=2904 +CLK_PS=3000 +CTRL_CLK_PS=11000
+PASS ppc1 b2r_random_test seed=2601 
+PASS ppc1 b2r_random_test seed=2602 
+PASS ppc1 b2r_random_test seed=2603 
+PASS ppc1 b2r_smoke_test seed=2501 
+PASS ppc1 b2r_smoke_test seed=2502 
+PASS ppc2 b2r_random_test seed=2401 
+PASS ppc2 b2r_random_test seed=2402 
+PASS ppc2 b2r_random_test seed=2403 
+PASS ppc2 b2r_smoke_test seed=2301 
+PASS ppc2 b2r_smoke_test seed=2302 
+PASS ppc4 b2r_random_test seed=2201 
+PASS ppc4 b2r_random_test seed=2202 
+PASS ppc4 b2r_random_test seed=2203 
+PASS ppc4 b2r_random_test seed=2204 
+PASS ppc4 b2r_size_test seed=2101 
+PASS ppc4 b2r_smoke_test seed=2001 
+PASS ppc4 b2r_smoke_test seed=2002 
+PASS ppc8 b2r_4kb_test seed=901 
+PASS ppc8 b2r_4kb_test seed=902 
+PASS ppc8 b2r_4kb_test seed=903 
+PASS ppc8 b2r_auto_restart_test seed=1001 
+PASS ppc8 b2r_auto_restart_test seed=1002 
+PASS ppc8 b2r_auto_restart_test seed=1003 
+PASS ppc8 b2r_bypass_test seed=501 
+PASS ppc8 b2r_bypass_test seed=502 
+PASS ppc8 b2r_ctrl_test seed=1301 
+PASS ppc8 b2r_ctrl_test seed=1302 
+PASS ppc8 b2r_ctrl_test seed=1303 
+PASS ppc8 b2r_error_test seed=1101 
+PASS ppc8 b2r_error_test seed=1102 
+PASS ppc8 b2r_error_test seed=1103 
+PASS ppc8 b2r_full_frame_test seed=1801 
+PASS ppc8 b2r_func_test seed=401 
+PASS ppc8 b2r_func_test seed=402 
+PASS ppc8 b2r_func_test seed=403 
+PASS ppc8 b2r_phase_test seed=301 
+PASS ppc8 b2r_phase_test seed=302 
+PASS ppc8 b2r_random_test seed=1401 
+PASS ppc8 b2r_random_test seed=1402 
+PASS ppc8 b2r_random_test seed=1403 
+PASS ppc8 b2r_random_test seed=1404 
+PASS ppc8 b2r_random_test seed=1405 
+PASS ppc8 b2r_random_test seed=1406 
+PASS ppc8 b2r_random_test seed=1407 
+PASS ppc8 b2r_random_test seed=1408 
+PASS ppc8 b2r_random_test seed=1409 
+PASS ppc8 b2r_random_test seed=1410 
+PASS ppc8 b2r_random_test seed=1501 +CLK_PS=2000 +CTRL_CLK_PS=21000
+PASS ppc8 b2r_random_test seed=1502 +CLK_PS=2000 +CTRL_CLK_PS=21000
+PASS ppc8 b2r_random_test seed=1503 +CLK_PS=2000 +CTRL_CLK_PS=21000
+PASS ppc8 b2r_random_test seed=1601 +CLK_PS=10000 +CTRL_CLK_PS=2500
+PASS ppc8 b2r_random_test seed=1602 +CLK_PS=10000 +CTRL_CLK_PS=2500
+PASS ppc8 b2r_random_test seed=1603 +CLK_PS=10000 +CTRL_CLK_PS=2500
+PASS ppc8 b2r_random_test seed=1701 +B2R_WMAX=1024 +B2R_HMAX=64
+PASS ppc8 b2r_random_test seed=1702 +B2R_WMAX=1024 +B2R_HMAX=64
+PASS ppc8 b2r_reg_test seed=101 
+PASS ppc8 b2r_reg_test seed=102 
+PASS ppc8 b2r_size_test seed=701 
+PASS ppc8 b2r_size_test seed=702 
+PASS ppc8 b2r_smoke_test seed=201 
+PASS ppc8 b2r_smoke_test seed=202 
+PASS ppc8 b2r_smoke_test seed=203 
+PASS ppc8 b2r_stress_test seed=801 
+PASS ppc8 b2r_stress_test seed=802 
+PASS ppc8 b2r_stress_test seed=803 
+PASS ppc8 b2r_sw_reset_test seed=1201 
+PASS ppc8 b2r_sw_reset_test seed=1202 
+PASS ppc8 b2r_sw_reset_test seed=1203 
+PASS ppc8 b2r_sw_reset_test seed=1204 
+PASS ppc8 b2r_sw_reset_test seed=1205 
+PASS ppc8 b2r_tpg_test seed=601 
+PASS ppc8 b2r_tpg_test seed=602 
+PASS ppc8 b2r_wave_test seed=1901 

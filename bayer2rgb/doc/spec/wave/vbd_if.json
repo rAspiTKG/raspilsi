@@ -1,0 +1,42 @@
+{
+ "signal": [
+  {
+   "name": "clk",
+   "wave": "p..............."
+  },
+  {
+   "name": "pix.vld",
+   "wave": "1..............."
+  },
+  {
+   "name": "pix.busy",
+   "wave": "0...10....10...."
+  },
+  {
+   "name": "pix.data",
+   "wave": "=====.=====.====",
+   "data": [
+    "D0",
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6",
+    "D7",
+    "D8",
+    "D9",
+    "D10",
+    "D11",
+    "D12",
+    "D13"
+   ]
+  }
+ ],
+ "head": {
+  "text": "vld/busy/data: vld=1 かつ busy=0 のクロックで転送。busy=1 の間は vld と data を保持"
+ },
+ "config": {
+  "hscale": 1
+ }
+}
