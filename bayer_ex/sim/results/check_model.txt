@@ -1,0 +1,7 @@
+照合 1754 転送、不一致 0
+bex_bypass_test_s15.txt: 167 転送
+bex_edge_test_s13.txt: 133 転送
+bex_phase_test_s14.txt: 232 転送
+bex_random_test_s11.txt: 426 転送
+bex_random_test_s12.txt: 441 転送
+bex_reset_test_s16.txt: 355 転送

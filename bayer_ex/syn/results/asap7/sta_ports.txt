@@ -1,0 +1,3 @@
+入力 i_vld i_busy i_data i_cfg: 240
+出力 o_vld o_busy o_data: 117
+すべての入力: 242(clk と rst_n を含む)、すべての出力: 117

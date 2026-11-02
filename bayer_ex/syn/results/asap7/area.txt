@@ -1,0 +1,170 @@
+
+26. Printing statistics.
+
+=== BAYER_EX ===
+
+   Number of wires:               1764
+   Number of wire bits:           2114
+   Number of public wires:         249
+   Number of public wire bits:     599
+   Number of ports:                  9
+   Number of port bits:            359
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1757
+     AND2x2_ASAP7_75t_R              2
+     AOI21x1_ASAP7_75t_R           115
+     BAYER_EX_PIXCOR                 1
+     BUFx12f_ASAP7_75t_R             5
+     BUFx2_ASAP7_75t_R              60
+     BUFx3_ASAP7_75t_R              38
+     BUFx4_ASAP7_75t_R               1
+     BUFx4f_ASAP7_75t_R              8
+     BUFx6f_ASAP7_75t_R              3
+     DFFASRHQNx1_ASAP7_75t_R         2
+     DFFHQNx1_ASAP7_75t_R          353
+     INVx1_ASAP7_75t_R             356
+     INVx4_ASAP7_75t_R               1
+     NAND2x1_ASAP7_75t_R           232
+     NAND2x2_ASAP7_75t_R             1
+     NAND3x1_ASAP7_75t_R           115
+     NAND3x2_ASAP7_75t_R             1
+     NOR2x1_ASAP7_75t_R            192
+     NOR2x2_ASAP7_75t_R             39
+     OAI21x1_ASAP7_75t_R           231
+     TIEHIx1_ASAP7_75t_R             1
+
+   Area for cell type \BAYER_EX_PIXCOR is unknown!
+
+   Chip area for module '\BAYER_EX': 232.069860
+     of which used for sequential elements: 103.692960 (44.68%)
+
+=== BAYER_EX_PIXCOR ===
+
+   Number of wires:              14620
+   Number of wire bits:          14970
+   Number of public wires:          66
+   Number of public wire bits:     416
+   Number of ports:                  8
+   Number of port bits:            358
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              12413
+     AND2x2_ASAP7_75t_R            267
+     AND3x1_ASAP7_75t_R            116
+     AND4x1_ASAP7_75t_R             15
+     AND5x1_ASAP7_75t_R              4
+     AO21x1_ASAP7_75t_R            767
+     AO221x1_ASAP7_75t_R            33
+     AO22x1_ASAP7_75t_R            112
+     AOI211x1_ASAP7_75t_R            6
+     AOI21x1_ASAP7_75t_R           117
+     AOI221x1_ASAP7_75t_R           17
+     AOI22x1_ASAP7_75t_R            98
+     BUFx12f_ASAP7_75t_R             1
+     BUFx2_ASAP7_75t_R             560
+     BUFx3_ASAP7_75t_R               6
+     BUFx4f_ASAP7_75t_R              2
+     BUFx6f_ASAP7_75t_R              6
+     DFFASRHQNx1_ASAP7_75t_R         2
+     DFFHQNx1_ASAP7_75t_R          230
+     FAx1_ASAP7_75t_R             1368
+     HAxp5_ASAP7_75t_R             947
+     INVx1_ASAP7_75t_R            4427
+     INVx2_ASAP7_75t_R               2
+     INVx3_ASAP7_75t_R               1
+     INVx4_ASAP7_75t_R               1
+     NAND2x1_ASAP7_75t_R           196
+     NAND2x2_ASAP7_75t_R             4
+     NAND3x1_ASAP7_75t_R            20
+     NAND3x2_ASAP7_75t_R             2
+     NOR2x1_ASAP7_75t_R           2043
+     NOR2x2_ASAP7_75t_R             19
+     NOR3x1_ASAP7_75t_R             57
+     NOR3x2_ASAP7_75t_R              1
+     OA211x2_ASAP7_75t_R             4
+     OA21x2_ASAP7_75t_R            173
+     OA221x2_ASAP7_75t_R             1
+     OA22x2_ASAP7_75t_R             64
+     OAI21x1_ASAP7_75t_R           377
+     OAI22x1_ASAP7_75t_R            61
+     OR2x2_ASAP7_75t_R              39
+     OR3x1_ASAP7_75t_R              33
+     OR4x1_ASAP7_75t_R               8
+     OR5x1_ASAP7_75t_R               2
+     TIEHIx1_ASAP7_75t_R             1
+     XNOR2x1_ASAP7_75t_R             1
+     XNOR2x2_ASAP7_75t_R            43
+     XOR2x2_ASAP7_75t_R            159
+
+   Chip area for module '\BAYER_EX_PIXCOR': 1195.487100
+     of which used for sequential elements: 67.826160 (5.67%)
+
+=== design hierarchy ===
+
+   BAYER_EX                          1
+     BAYER_EX_PIXCOR                 1
+
+   Number of wires:              16384
+   Number of wire bits:          17084
+   Number of public wires:         315
+   Number of public wire bits:    1015
+   Number of ports:                 17
+   Number of port bits:            717
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              14169
+     AND2x2_ASAP7_75t_R            269
+     AND3x1_ASAP7_75t_R            116
+     AND4x1_ASAP7_75t_R             15
+     AND5x1_ASAP7_75t_R              4
+     AO21x1_ASAP7_75t_R            767
+     AO221x1_ASAP7_75t_R            33
+     AO22x1_ASAP7_75t_R            112
+     AOI211x1_ASAP7_75t_R            6
+     AOI21x1_ASAP7_75t_R           232
+     AOI221x1_ASAP7_75t_R           17
+     AOI22x1_ASAP7_75t_R            98
+     BUFx12f_ASAP7_75t_R             6
+     BUFx2_ASAP7_75t_R             620
+     BUFx3_ASAP7_75t_R              44
+     BUFx4_ASAP7_75t_R               1
+     BUFx4f_ASAP7_75t_R             10
+     BUFx6f_ASAP7_75t_R              9
+     DFFASRHQNx1_ASAP7_75t_R         4
+     DFFHQNx1_ASAP7_75t_R          583
+     FAx1_ASAP7_75t_R             1368
+     HAxp5_ASAP7_75t_R             947
+     INVx1_ASAP7_75t_R            4783
+     INVx2_ASAP7_75t_R               2
+     INVx3_ASAP7_75t_R               1
+     INVx4_ASAP7_75t_R               2
+     NAND2x1_ASAP7_75t_R           428
+     NAND2x2_ASAP7_75t_R             5
+     NAND3x1_ASAP7_75t_R           135
+     NAND3x2_ASAP7_75t_R             3
+     NOR2x1_ASAP7_75t_R           2235
+     NOR2x2_ASAP7_75t_R             58
+     NOR3x1_ASAP7_75t_R             57
+     NOR3x2_ASAP7_75t_R              1
+     OA211x2_ASAP7_75t_R             4
+     OA21x2_ASAP7_75t_R            173
+     OA221x2_ASAP7_75t_R             1
+     OA22x2_ASAP7_75t_R             64
+     OAI21x1_ASAP7_75t_R           608
+     OAI22x1_ASAP7_75t_R            61
+     OR2x2_ASAP7_75t_R              39
+     OR3x1_ASAP7_75t_R              33
+     OR4x1_ASAP7_75t_R               8
+     OR5x1_ASAP7_75t_R               2
+     TIEHIx1_ASAP7_75t_R             2
+     XNOR2x1_ASAP7_75t_R             1
+     XNOR2x2_ASAP7_75t_R            43
+     XOR2x2_ASAP7_75t_R            159
+
+   Chip area for top module '\BAYER_EX': 1427.556960
+     of which used for sequential elements: 67.826160 (4.75%)
+

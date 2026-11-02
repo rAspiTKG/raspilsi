@@ -1,0 +1,1 @@
+BAYER_EX(トップ)+ BAYER_EX_CORE + BAYER_EX_PIXCOR: %Warning 0 件, %Error 0 件

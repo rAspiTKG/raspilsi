@@ -1,0 +1,38 @@
+{
+ "signal": [
+  {
+   "name": "clk",
+   "wave": "p................."
+  },
+  {
+   "name": "i_vld",
+   "wave": "1..0.1.........0.."
+  },
+  {
+   "name": "o_busy",
+   "wave": "0.....1.....0....."
+  },
+  {
+   "name": "i_pix.data",
+   "wave": "===x.==......==x..",
+   "data": [
+    "D0",
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6"
+   ]
+  }
+ ],
+ "head": {
+  "text": "vld/busy/data(入力側): vld=1 かつ busy=0 で転送。busy=1 の間は vld と data を保持"
+ },
+ "config": {
+  "hscale": 2
+ },
+ "foot": {
+  "text": "データのラベル D0, D1, … は転送ごとの値(画素 pix[0][0])。o_busy は FF から出す"
+ }
+}

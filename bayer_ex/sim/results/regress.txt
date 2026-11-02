@@ -1,0 +1,49 @@
+PASS core bex_bypass_test seed=201 
+PASS core bex_bypass_test seed=202 
+PASS core bex_bypass_test seed=203 
+PASS core bex_cfg_change_test seed=1101 
+PASS core bex_cfg_change_test seed=1102 
+PASS core bex_cfg_change_test seed=1103 
+PASS core bex_cfg_change_test seed=1104 
+PASS core bex_edge_test seed=401 
+PASS core bex_edge_test seed=402 
+PASS core bex_edge_test seed=403 
+PASS core bex_phase_test seed=301 
+PASS core bex_phase_test seed=302 
+PASS core bex_phase_test seed=303 
+PASS core bex_random_test seed=501 
+PASS core bex_random_test seed=502 
+PASS core bex_random_test seed=503 
+PASS core bex_random_test seed=504 
+PASS core bex_random_test seed=505 
+PASS core bex_random_test seed=506 
+PASS core bex_random_test seed=507 
+PASS core bex_random_test seed=508 
+PASS core bex_random_test seed=509 
+PASS core bex_random_test seed=510 
+PASS core bex_random_test seed=601 +BEX_WMAX=256 +BEX_HMAX=32
+PASS core bex_random_test seed=602 +BEX_WMAX=256 +BEX_HMAX=32
+PASS core bex_random_test seed=603 +BEX_WMAX=256 +BEX_HMAX=32
+PASS core bex_random_test seed=701 +CLK_PS=2000
+PASS core bex_random_test seed=702 +CLK_PS=2000
+PASS core bex_reset_test seed=1001 
+PASS core bex_reset_test seed=1002 
+PASS core bex_reset_test seed=1003 
+PASS core bex_reset_test seed=1004 
+PASS core bex_reset_test seed=1005 
+PASS core bex_smoke_test seed=101 
+PASS core bex_smoke_test seed=102 
+PASS core bex_stall_test seed=801 
+PASS core bex_stall_test seed=802 
+PASS core bex_stall_test seed=803 
+PASS core bex_throughput_test seed=901 
+PASS core bex_throughput_test seed=902 
+PASS core bex_wave_test seed=1201 
+PASS top bex_random_test seed=1401 
+PASS top bex_random_test seed=1402 
+PASS top bex_random_test seed=1403 
+PASS top bex_random_test seed=1404 
+PASS top bex_reset_test seed=1501 
+PASS top bex_reset_test seed=1502 
+PASS top bex_smoke_test seed=1301 
+PASS top bex_throughput_test seed=1601 

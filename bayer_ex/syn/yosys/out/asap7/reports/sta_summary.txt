@@ -1,0 +1,7 @@
+Clock                   Period          Waveform
+----------------------------------------------------
+clk                    2500.00        0.00   1250.00
+clk_io                 2500.00        0.00   1250.00
+worst slack max 764.229
+worst slack min -80.691
+tns max 0.000

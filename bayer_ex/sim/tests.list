@@ -1,0 +1,22 @@
+# ============================================================================
+# 回帰試験の一覧(run_regress.sh が読む)
+#   書式: <ビルド> <テスト名> <シードの数> [プラスアーグ ...]
+#   ビルド: core(DUT = BAYER_EX_CORE)/ top(DUT = BAYER_EX。合成のトップ)
+#   # から行末まではコメント
+# ============================================================================
+core bex_smoke_test       2
+core bex_bypass_test      3
+core bex_phase_test       3
+core bex_edge_test        3
+core bex_random_test      10
+core bex_random_test      3  +BEX_WMAX=256 +BEX_HMAX=32
+core bex_random_test      2  +CLK_PS=2000
+core bex_stall_test       3
+core bex_throughput_test  2
+core bex_reset_test       5
+core bex_cfg_change_test  4
+core bex_wave_test        1
+top  bex_smoke_test       1
+top  bex_random_test      4
+top  bex_reset_test       2
+top  bex_throughput_test  1

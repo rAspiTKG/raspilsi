@@ -1,0 +1,22 @@
+Clock clk
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+ 144.35         network latency u_core.u_pixcor/r_data2[82]$_DFFE_PP_/CLK
+         170.71 network latency u_core.r_cfg[120]$_DFF_P_/CLK
+---------------
+ 144.35  170.71 latency
+          26.36 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+ 156.51         network latency u_core.u_pixcor/r_data2[82]$_DFFE_PP_/CLK
+         182.86 network latency u_core.r_cfg[120]$_DFF_P_/CLK
+---------------
+ 156.51  182.86 latency
+          26.35 skew
+
+
+Clock clk_io
+

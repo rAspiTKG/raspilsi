@@ -1,0 +1,495 @@
+Startpoint: rst_n (input port clocked by clk_io)
+Endpoint: u_core.r_in_vld$_DFFE_PN0P_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+            0.000    0.000    0.000   clock clk_io (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+                  1250.000 1250.000 ^ input external delay
+   4.106   50.000    0.000 1250.000 ^ rst_n (in)
+           50.000    0.000 1250.000 ^ u_core.r_in_vld$_DFFE_PN0P_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+                           1250.000   data arrival time
+
+           50.000 2500.000 2500.000   clock clk (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                           2400.000 ^ u_core.r_in_vld$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                    20.506 2420.506   library recovery time
+                           2420.506   data required time
+---------------------------------------------------------------------------
+                           2420.506   data required time
+                           -1250.000   data arrival time
+---------------------------------------------------------------------------
+                           1170.506   slack (MET)
+
+
+Startpoint: rst_n (input port clocked by clk_io)
+Endpoint: u_core.r_skd_vld$_DFFE_PN0P_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+            0.000    0.000    0.000   clock clk_io (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+                  1250.000 1250.000 ^ input external delay
+   4.106   50.000    0.000 1250.000 ^ rst_n (in)
+           50.000    0.000 1250.000 ^ u_core.r_skd_vld$_DFFE_PN0P_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+                           1250.000   data arrival time
+
+           50.000 2500.000 2500.000   clock clk (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                           2400.000 ^ u_core.r_skd_vld$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                    20.506 2420.506   library recovery time
+                           2420.506   data required time
+---------------------------------------------------------------------------
+                           2420.506   data required time
+                           -1250.000   data arrival time
+---------------------------------------------------------------------------
+                           1170.506   slack (MET)
+
+
+Startpoint: rst_n (input port clocked by clk_io)
+Endpoint: u_core.u_pixcor/r_vld1$_DFFE_PN0P_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+            0.000    0.000    0.000   clock clk_io (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+                  1250.000 1250.000 ^ input external delay
+   4.106   50.000    0.000 1250.000 ^ rst_n (in)
+           50.000    0.000 1250.000 ^ u_core.u_pixcor/r_vld1$_DFFE_PN0P_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+                           1250.000   data arrival time
+
+           50.000 2500.000 2500.000   clock clk (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                           2400.000 ^ u_core.u_pixcor/r_vld1$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                    20.506 2420.506   library recovery time
+                           2420.506   data required time
+---------------------------------------------------------------------------
+                           2420.506   data required time
+                           -1250.000   data arrival time
+---------------------------------------------------------------------------
+                           1170.506   slack (MET)
+
+
+Startpoint: u_core.r_cfg[120]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_core.u_pixcor/r_data2[74]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+           50.000    0.000    0.000   clock clk (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+           50.000    0.000    0.000 ^ u_core.r_cfg[120]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   0.578   28.785   82.231   82.231 v u_core.r_cfg[120]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+           28.785    0.000   82.231 v _1659_/A (INVx1_ASAP7_75t_R)
+   2.399   40.691   29.430  111.661 ^ _1659_/Y (INVx1_ASAP7_75t_R)
+           40.691    0.000  111.661 ^ u_core.u_pixcor/_14670_/A (INVx1_ASAP7_75t_R)
+   1.806   27.526   25.833  137.494 v u_core.u_pixcor/_14670_/Y (INVx1_ASAP7_75t_R)
+           27.526    0.000  137.494 v u_core.u_pixcor/_25787_/A (HAxp5_ASAP7_75t_R)
+   1.119   45.631   31.243  168.738 ^ u_core.u_pixcor/_25787_/CON (HAxp5_ASAP7_75t_R)
+           45.631    0.000  168.738 ^ u_core.u_pixcor/_14672_/A (BUFx6f_ASAP7_75t_R)
+   6.163   21.721   38.220  206.958 ^ u_core.u_pixcor/_14672_/Y (BUFx6f_ASAP7_75t_R)
+           21.721    0.000  206.958 ^ u_core.u_pixcor/_14673_/A (INVx3_ASAP7_75t_R)
+   3.474   16.634   15.876  222.834 v u_core.u_pixcor/_14673_/Y (INVx3_ASAP7_75t_R)
+           16.634    0.000  222.834 v u_core.u_pixcor/_14674_/A (BUFx6f_ASAP7_75t_R)
+   6.312   17.931   31.537  254.370 v u_core.u_pixcor/_14674_/Y (BUFx6f_ASAP7_75t_R)
+           17.931    0.000  254.370 v u_core.u_pixcor/_14675_/A (BUFx2_ASAP7_75t_R)
+   4.522   29.631   41.362  295.733 v u_core.u_pixcor/_14675_/Y (BUFx2_ASAP7_75t_R)
+           29.631    0.000  295.733 v u_core.u_pixcor/_14995_/A (BUFx2_ASAP7_75t_R)
+   5.269   33.289   47.536  343.269 v u_core.u_pixcor/_14995_/Y (BUFx2_ASAP7_75t_R)
+           33.289    0.000  343.269 v u_core.u_pixcor/_23722_/B (AO21x1_ASAP7_75t_R)
+   1.027   18.443   40.007  383.276 v u_core.u_pixcor/_23722_/Y (AO21x1_ASAP7_75t_R)
+           18.443    0.000  383.276 v u_core.u_pixcor/_23723_/B2 (OAI22x1_ASAP7_75t_R)
+   0.507   32.481   20.151  403.427 ^ u_core.u_pixcor/_23723_/Y (OAI22x1_ASAP7_75t_R)
+           32.481    0.000  403.427 ^ u_core.u_pixcor/_23724_/A (BUFx2_ASAP7_75t_R)
+   8.658   66.653   58.483  461.909 ^ u_core.u_pixcor/_23724_/Y (BUFx2_ASAP7_75t_R)
+           66.653    0.000  461.909 ^ u_core.u_pixcor/_23725_/A (BUFx2_ASAP7_75t_R)
+   9.557   73.460   70.970  532.880 ^ u_core.u_pixcor/_23725_/Y (BUFx2_ASAP7_75t_R)
+           73.460    0.000  532.880 ^ u_core.u_pixcor/_23757_/B (NOR2x1_ASAP7_75t_R)
+   1.840   36.794   36.640  569.520 v u_core.u_pixcor/_23757_/Y (NOR2x1_ASAP7_75t_R)
+           36.794    0.000  569.520 v u_core.u_pixcor/_25279_/B (FAx1_ASAP7_75t_R)
+   0.579   53.765   38.431  607.950 ^ u_core.u_pixcor/_25279_/CON (FAx1_ASAP7_75t_R)
+   0.578   37.556   25.412  633.362 v u_core.u_pixcor/_25279_/SN (FAx1_ASAP7_75t_R)
+           37.556    0.000  633.362 v u_core.u_pixcor/_20743_/A (INVx1_ASAP7_75t_R)
+   1.681   33.695   27.669  661.031 ^ u_core.u_pixcor/_20743_/Y (INVx1_ASAP7_75t_R)
+           33.695    0.000  661.031 ^ u_core.u_pixcor/_25332_/A (FAx1_ASAP7_75t_R)
+   0.578   36.561   61.284  722.315 v u_core.u_pixcor/_25332_/SN (FAx1_ASAP7_75t_R)
+           36.561    0.000  722.315 v u_core.u_pixcor/_20771_/A (INVx1_ASAP7_75t_R)
+   1.681   33.441   27.324  749.639 ^ u_core.u_pixcor/_20771_/Y (INVx1_ASAP7_75t_R)
+           33.441    0.000  749.639 ^ u_core.u_pixcor/_25375_/A (FAx1_ASAP7_75t_R)
+   0.578   36.527   61.219  810.858 v u_core.u_pixcor/_25375_/SN (FAx1_ASAP7_75t_R)
+           36.527    0.000  810.858 v u_core.u_pixcor/_20799_/A (INVx1_ASAP7_75t_R)
+   1.681   33.432   27.313  838.171 ^ u_core.u_pixcor/_20799_/Y (INVx1_ASAP7_75t_R)
+           33.432    0.000  838.171 ^ u_core.u_pixcor/_25401_/A (FAx1_ASAP7_75t_R)
+   0.578   36.526   61.217  899.388 v u_core.u_pixcor/_25401_/SN (FAx1_ASAP7_75t_R)
+           36.526    0.000  899.388 v u_core.u_pixcor/_20825_/A (INVx1_ASAP7_75t_R)
+   1.839   35.399   28.398  927.786 ^ u_core.u_pixcor/_20825_/Y (INVx1_ASAP7_75t_R)
+           35.399    0.000  927.786 ^ u_core.u_pixcor/_25413_/B (FAx1_ASAP7_75t_R)
+   0.578   36.440   60.939  988.725 v u_core.u_pixcor/_25413_/SN (FAx1_ASAP7_75t_R)
+           36.440    0.000  988.725 v u_core.u_pixcor/_20851_/A (INVx1_ASAP7_75t_R)
+   1.839   35.377   28.368 1017.093 ^ u_core.u_pixcor/_20851_/Y (INVx1_ASAP7_75t_R)
+           35.377    0.000 1017.093 ^ u_core.u_pixcor/_25424_/B (FAx1_ASAP7_75t_R)
+   0.578   34.003   30.995 1048.088 v u_core.u_pixcor/_25424_/CON (FAx1_ASAP7_75t_R)
+   0.579   52.724   24.560 1072.648 ^ u_core.u_pixcor/_25424_/SN (FAx1_ASAP7_75t_R)
+           52.724    0.000 1072.648 ^ u_core.u_pixcor/_20877_/A (INVx1_ASAP7_75t_R)
+   0.903   22.247   21.571 1094.219 v u_core.u_pixcor/_20877_/Y (INVx1_ASAP7_75t_R)
+           22.247    0.000 1094.219 v u_core.u_pixcor/_26292_/A (HAxp5_ASAP7_75t_R)
+   4.333  106.018  139.703 1233.922 v u_core.u_pixcor/_26292_/SN (HAxp5_ASAP7_75t_R)
+          106.018    0.000 1233.922 v u_core.u_pixcor/_18152_/A (NOR2x1_ASAP7_75t_R)
+   1.465   47.464   36.489 1270.411 ^ u_core.u_pixcor/_18152_/Y (NOR2x1_ASAP7_75t_R)
+           47.464    0.000 1270.411 ^ u_core.u_pixcor/_18200_/B (AND2x2_ASAP7_75t_R)
+   1.126   17.394   39.636 1310.046 ^ u_core.u_pixcor/_18200_/Y (AND2x2_ASAP7_75t_R)
+           17.394    0.000 1310.046 ^ u_core.u_pixcor/_18201_/A (AND3x1_ASAP7_75t_R)
+   1.511   31.459   42.023 1352.069 ^ u_core.u_pixcor/_18201_/Y (AND3x1_ASAP7_75t_R)
+           31.459    0.000 1352.069 ^ u_core.u_pixcor/_18202_/B (AND2x2_ASAP7_75t_R)
+   1.021   16.031   34.822 1386.891 ^ u_core.u_pixcor/_18202_/Y (AND2x2_ASAP7_75t_R)
+           16.031    0.000 1386.891 ^ u_core.u_pixcor/_18215_/A1 (AOI21x1_ASAP7_75t_R)
+   0.847   19.500   15.242 1402.133 v u_core.u_pixcor/_18215_/Y (AOI21x1_ASAP7_75t_R)
+           19.500    0.000 1402.133 v u_core.u_pixcor/_18216_/A (XOR2x2_ASAP7_75t_R)
+   1.066   20.115   50.791 1452.924 ^ u_core.u_pixcor/_18216_/Y (XOR2x2_ASAP7_75t_R)
+           20.115    0.000 1452.924 ^ u_core.u_pixcor/_18217_/B (AOI21x1_ASAP7_75t_R)
+   6.470   70.134   35.897 1488.822 v u_core.u_pixcor/_18217_/Y (AOI21x1_ASAP7_75t_R)
+           70.134    0.000 1488.822 v u_core.u_pixcor/_18232_/A (INVx1_ASAP7_75t_R)
+   6.768  106.765   73.225 1562.047 ^ u_core.u_pixcor/_18232_/Y (INVx1_ASAP7_75t_R)
+          106.765    0.000 1562.047 ^ u_core.u_pixcor/_18252_/C (NOR3x1_ASAP7_75t_R)
+   0.872   43.892   46.455 1608.502 v u_core.u_pixcor/_18252_/Y (NOR3x1_ASAP7_75t_R)
+           43.892    0.000 1608.502 v u_core.u_pixcor/_18254_/A2 (OAI21x1_ASAP7_75t_R)
+   0.525   25.836   22.091 1630.593 ^ u_core.u_pixcor/_18254_/Y (OAI21x1_ASAP7_75t_R)
+           25.836    0.000 1630.593 ^ u_core.u_pixcor/r_data2[74]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                           1630.593   data arrival time
+
+           50.000 2500.000 2500.000   clock clk (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                           2400.000 ^ u_core.u_pixcor/r_data2[74]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                   -14.150 2385.850   library setup time
+                           2385.850   data required time
+---------------------------------------------------------------------------
+                           2385.850   data required time
+                           -1630.593   data arrival time
+---------------------------------------------------------------------------
+                            755.257   slack (MET)
+
+
+Startpoint: u_core.r_cfg[120]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_core.u_pixcor/r_data2[78]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+           50.000    0.000    0.000   clock clk (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+           50.000    0.000    0.000 ^ u_core.r_cfg[120]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   0.578   28.785   82.231   82.231 v u_core.r_cfg[120]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+           28.785    0.000   82.231 v _1659_/A (INVx1_ASAP7_75t_R)
+   2.399   40.691   29.430  111.661 ^ _1659_/Y (INVx1_ASAP7_75t_R)
+           40.691    0.000  111.661 ^ u_core.u_pixcor/_14670_/A (INVx1_ASAP7_75t_R)
+   1.806   27.526   25.833  137.494 v u_core.u_pixcor/_14670_/Y (INVx1_ASAP7_75t_R)
+           27.526    0.000  137.494 v u_core.u_pixcor/_25787_/A (HAxp5_ASAP7_75t_R)
+   1.119   45.631   31.243  168.738 ^ u_core.u_pixcor/_25787_/CON (HAxp5_ASAP7_75t_R)
+           45.631    0.000  168.738 ^ u_core.u_pixcor/_14672_/A (BUFx6f_ASAP7_75t_R)
+   6.163   21.721   38.220  206.958 ^ u_core.u_pixcor/_14672_/Y (BUFx6f_ASAP7_75t_R)
+           21.721    0.000  206.958 ^ u_core.u_pixcor/_14673_/A (INVx3_ASAP7_75t_R)
+   3.474   16.634   15.876  222.834 v u_core.u_pixcor/_14673_/Y (INVx3_ASAP7_75t_R)
+           16.634    0.000  222.834 v u_core.u_pixcor/_14674_/A (BUFx6f_ASAP7_75t_R)
+   6.312   17.931   31.537  254.370 v u_core.u_pixcor/_14674_/Y (BUFx6f_ASAP7_75t_R)
+           17.931    0.000  254.370 v u_core.u_pixcor/_14675_/A (BUFx2_ASAP7_75t_R)
+   4.522   29.631   41.362  295.733 v u_core.u_pixcor/_14675_/Y (BUFx2_ASAP7_75t_R)
+           29.631    0.000  295.733 v u_core.u_pixcor/_14995_/A (BUFx2_ASAP7_75t_R)
+   5.269   33.289   47.536  343.269 v u_core.u_pixcor/_14995_/Y (BUFx2_ASAP7_75t_R)
+           33.289    0.000  343.269 v u_core.u_pixcor/_23722_/B (AO21x1_ASAP7_75t_R)
+   1.027   18.443   40.007  383.276 v u_core.u_pixcor/_23722_/Y (AO21x1_ASAP7_75t_R)
+           18.443    0.000  383.276 v u_core.u_pixcor/_23723_/B2 (OAI22x1_ASAP7_75t_R)
+   0.507   32.481   20.151  403.427 ^ u_core.u_pixcor/_23723_/Y (OAI22x1_ASAP7_75t_R)
+           32.481    0.000  403.427 ^ u_core.u_pixcor/_23724_/A (BUFx2_ASAP7_75t_R)
+   8.658   66.653   58.483  461.909 ^ u_core.u_pixcor/_23724_/Y (BUFx2_ASAP7_75t_R)
+           66.653    0.000  461.909 ^ u_core.u_pixcor/_23725_/A (BUFx2_ASAP7_75t_R)
+   9.557   73.460   70.970  532.880 ^ u_core.u_pixcor/_23725_/Y (BUFx2_ASAP7_75t_R)
+           73.460    0.000  532.880 ^ u_core.u_pixcor/_23757_/B (NOR2x1_ASAP7_75t_R)
+   1.840   36.794   36.640  569.520 v u_core.u_pixcor/_23757_/Y (NOR2x1_ASAP7_75t_R)
+           36.794    0.000  569.520 v u_core.u_pixcor/_25279_/B (FAx1_ASAP7_75t_R)
+   0.579   53.765   38.431  607.950 ^ u_core.u_pixcor/_25279_/CON (FAx1_ASAP7_75t_R)
+   0.578   37.556   25.412  633.362 v u_core.u_pixcor/_25279_/SN (FAx1_ASAP7_75t_R)
+           37.556    0.000  633.362 v u_core.u_pixcor/_20743_/A (INVx1_ASAP7_75t_R)
+   1.681   33.695   27.669  661.031 ^ u_core.u_pixcor/_20743_/Y (INVx1_ASAP7_75t_R)
+           33.695    0.000  661.031 ^ u_core.u_pixcor/_25332_/A (FAx1_ASAP7_75t_R)
+   0.578   36.561   61.284  722.315 v u_core.u_pixcor/_25332_/SN (FAx1_ASAP7_75t_R)
+           36.561    0.000  722.315 v u_core.u_pixcor/_20771_/A (INVx1_ASAP7_75t_R)
+   1.681   33.441   27.324  749.639 ^ u_core.u_pixcor/_20771_/Y (INVx1_ASAP7_75t_R)
+           33.441    0.000  749.639 ^ u_core.u_pixcor/_25375_/A (FAx1_ASAP7_75t_R)
+   0.578   36.527   61.219  810.858 v u_core.u_pixcor/_25375_/SN (FAx1_ASAP7_75t_R)
+           36.527    0.000  810.858 v u_core.u_pixcor/_20799_/A (INVx1_ASAP7_75t_R)
+   1.681   33.432   27.313  838.171 ^ u_core.u_pixcor/_20799_/Y (INVx1_ASAP7_75t_R)
+           33.432    0.000  838.171 ^ u_core.u_pixcor/_25401_/A (FAx1_ASAP7_75t_R)
+   0.578   36.526   61.217  899.388 v u_core.u_pixcor/_25401_/SN (FAx1_ASAP7_75t_R)
+           36.526    0.000  899.388 v u_core.u_pixcor/_20825_/A (INVx1_ASAP7_75t_R)
+   1.839   35.399   28.398  927.786 ^ u_core.u_pixcor/_20825_/Y (INVx1_ASAP7_75t_R)
+           35.399    0.000  927.786 ^ u_core.u_pixcor/_25413_/B (FAx1_ASAP7_75t_R)
+   0.578   36.440   60.939  988.725 v u_core.u_pixcor/_25413_/SN (FAx1_ASAP7_75t_R)
+           36.440    0.000  988.725 v u_core.u_pixcor/_20851_/A (INVx1_ASAP7_75t_R)
+   1.839   35.377   28.368 1017.093 ^ u_core.u_pixcor/_20851_/Y (INVx1_ASAP7_75t_R)
+           35.377    0.000 1017.093 ^ u_core.u_pixcor/_25424_/B (FAx1_ASAP7_75t_R)
+   0.578   34.003   30.995 1048.088 v u_core.u_pixcor/_25424_/CON (FAx1_ASAP7_75t_R)
+   0.579   52.724   24.560 1072.648 ^ u_core.u_pixcor/_25424_/SN (FAx1_ASAP7_75t_R)
+           52.724    0.000 1072.648 ^ u_core.u_pixcor/_20877_/A (INVx1_ASAP7_75t_R)
+   0.903   22.247   21.571 1094.219 v u_core.u_pixcor/_20877_/Y (INVx1_ASAP7_75t_R)
+           22.247    0.000 1094.219 v u_core.u_pixcor/_26292_/A (HAxp5_ASAP7_75t_R)
+   4.333  106.018  139.703 1233.922 v u_core.u_pixcor/_26292_/SN (HAxp5_ASAP7_75t_R)
+          106.018    0.000 1233.922 v u_core.u_pixcor/_18152_/A (NOR2x1_ASAP7_75t_R)
+   1.465   47.464   36.489 1270.411 ^ u_core.u_pixcor/_18152_/Y (NOR2x1_ASAP7_75t_R)
+           47.464    0.000 1270.411 ^ u_core.u_pixcor/_18200_/B (AND2x2_ASAP7_75t_R)
+   1.126   17.394   39.636 1310.046 ^ u_core.u_pixcor/_18200_/Y (AND2x2_ASAP7_75t_R)
+           17.394    0.000 1310.046 ^ u_core.u_pixcor/_18201_/A (AND3x1_ASAP7_75t_R)
+   1.511   31.459   42.023 1352.069 ^ u_core.u_pixcor/_18201_/Y (AND3x1_ASAP7_75t_R)
+           31.459    0.000 1352.069 ^ u_core.u_pixcor/_18202_/B (AND2x2_ASAP7_75t_R)
+   1.021   16.031   34.822 1386.891 ^ u_core.u_pixcor/_18202_/Y (AND2x2_ASAP7_75t_R)
+           16.031    0.000 1386.891 ^ u_core.u_pixcor/_18215_/A1 (AOI21x1_ASAP7_75t_R)
+   0.847   19.500   15.242 1402.133 v u_core.u_pixcor/_18215_/Y (AOI21x1_ASAP7_75t_R)
+           19.500    0.000 1402.133 v u_core.u_pixcor/_18216_/A (XOR2x2_ASAP7_75t_R)
+   1.066   20.115   50.791 1452.924 ^ u_core.u_pixcor/_18216_/Y (XOR2x2_ASAP7_75t_R)
+           20.115    0.000 1452.924 ^ u_core.u_pixcor/_18217_/B (AOI21x1_ASAP7_75t_R)
+   6.470   70.134   35.897 1488.822 v u_core.u_pixcor/_18217_/Y (AOI21x1_ASAP7_75t_R)
+           70.134    0.000 1488.822 v u_core.u_pixcor/_18232_/A (INVx1_ASAP7_75t_R)
+   6.768  106.765   73.225 1562.047 ^ u_core.u_pixcor/_18232_/Y (INVx1_ASAP7_75t_R)
+          106.765    0.000 1562.047 ^ u_core.u_pixcor/_18285_/C (NOR3x1_ASAP7_75t_R)
+   0.872   43.892   46.455 1608.502 v u_core.u_pixcor/_18285_/Y (NOR3x1_ASAP7_75t_R)
+           43.892    0.000 1608.502 v u_core.u_pixcor/_18287_/A2 (OAI21x1_ASAP7_75t_R)
+   0.525   25.836   22.091 1630.593 ^ u_core.u_pixcor/_18287_/Y (OAI21x1_ASAP7_75t_R)
+           25.836    0.000 1630.593 ^ u_core.u_pixcor/r_data2[78]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                           1630.593   data arrival time
+
+           50.000 2500.000 2500.000   clock clk (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                           2400.000 ^ u_core.u_pixcor/r_data2[78]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                   -14.150 2385.850   library setup time
+                           2385.850   data required time
+---------------------------------------------------------------------------
+                           2385.850   data required time
+                           -1630.593   data arrival time
+---------------------------------------------------------------------------
+                            755.257   slack (MET)
+
+
+Startpoint: u_core.r_cfg[120]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_core.u_pixcor/r_data2[79]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+           50.000    0.000    0.000   clock clk (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+           50.000    0.000    0.000 ^ u_core.r_cfg[120]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   0.578   28.785   82.231   82.231 v u_core.r_cfg[120]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+           28.785    0.000   82.231 v _1659_/A (INVx1_ASAP7_75t_R)
+   2.399   40.691   29.430  111.661 ^ _1659_/Y (INVx1_ASAP7_75t_R)
+           40.691    0.000  111.661 ^ u_core.u_pixcor/_14670_/A (INVx1_ASAP7_75t_R)
+   1.806   27.526   25.833  137.494 v u_core.u_pixcor/_14670_/Y (INVx1_ASAP7_75t_R)
+           27.526    0.000  137.494 v u_core.u_pixcor/_25787_/A (HAxp5_ASAP7_75t_R)
+   1.119   45.631   31.243  168.738 ^ u_core.u_pixcor/_25787_/CON (HAxp5_ASAP7_75t_R)
+           45.631    0.000  168.738 ^ u_core.u_pixcor/_14672_/A (BUFx6f_ASAP7_75t_R)
+   6.163   21.721   38.220  206.958 ^ u_core.u_pixcor/_14672_/Y (BUFx6f_ASAP7_75t_R)
+           21.721    0.000  206.958 ^ u_core.u_pixcor/_14673_/A (INVx3_ASAP7_75t_R)
+   3.474   16.634   15.876  222.834 v u_core.u_pixcor/_14673_/Y (INVx3_ASAP7_75t_R)
+           16.634    0.000  222.834 v u_core.u_pixcor/_14674_/A (BUFx6f_ASAP7_75t_R)
+   6.312   17.931   31.537  254.370 v u_core.u_pixcor/_14674_/Y (BUFx6f_ASAP7_75t_R)
+           17.931    0.000  254.370 v u_core.u_pixcor/_14675_/A (BUFx2_ASAP7_75t_R)
+   4.522   29.631   41.362  295.733 v u_core.u_pixcor/_14675_/Y (BUFx2_ASAP7_75t_R)
+           29.631    0.000  295.733 v u_core.u_pixcor/_14995_/A (BUFx2_ASAP7_75t_R)
+   5.269   33.289   47.536  343.269 v u_core.u_pixcor/_14995_/Y (BUFx2_ASAP7_75t_R)
+           33.289    0.000  343.269 v u_core.u_pixcor/_23722_/B (AO21x1_ASAP7_75t_R)
+   1.027   18.443   40.007  383.276 v u_core.u_pixcor/_23722_/Y (AO21x1_ASAP7_75t_R)
+           18.443    0.000  383.276 v u_core.u_pixcor/_23723_/B2 (OAI22x1_ASAP7_75t_R)
+   0.507   32.481   20.151  403.427 ^ u_core.u_pixcor/_23723_/Y (OAI22x1_ASAP7_75t_R)
+           32.481    0.000  403.427 ^ u_core.u_pixcor/_23724_/A (BUFx2_ASAP7_75t_R)
+   8.658   66.653   58.483  461.909 ^ u_core.u_pixcor/_23724_/Y (BUFx2_ASAP7_75t_R)
+           66.653    0.000  461.909 ^ u_core.u_pixcor/_23725_/A (BUFx2_ASAP7_75t_R)
+   9.557   73.460   70.970  532.880 ^ u_core.u_pixcor/_23725_/Y (BUFx2_ASAP7_75t_R)
+           73.460    0.000  532.880 ^ u_core.u_pixcor/_23757_/B (NOR2x1_ASAP7_75t_R)
+   1.840   36.794   36.640  569.520 v u_core.u_pixcor/_23757_/Y (NOR2x1_ASAP7_75t_R)
+           36.794    0.000  569.520 v u_core.u_pixcor/_25279_/B (FAx1_ASAP7_75t_R)
+   0.579   53.765   38.431  607.950 ^ u_core.u_pixcor/_25279_/CON (FAx1_ASAP7_75t_R)
+   0.578   37.556   25.412  633.362 v u_core.u_pixcor/_25279_/SN (FAx1_ASAP7_75t_R)
+           37.556    0.000  633.362 v u_core.u_pixcor/_20743_/A (INVx1_ASAP7_75t_R)
+   1.681   33.695   27.669  661.031 ^ u_core.u_pixcor/_20743_/Y (INVx1_ASAP7_75t_R)
+           33.695    0.000  661.031 ^ u_core.u_pixcor/_25332_/A (FAx1_ASAP7_75t_R)
+   0.578   36.561   61.284  722.315 v u_core.u_pixcor/_25332_/SN (FAx1_ASAP7_75t_R)
+           36.561    0.000  722.315 v u_core.u_pixcor/_20771_/A (INVx1_ASAP7_75t_R)
+   1.681   33.441   27.324  749.639 ^ u_core.u_pixcor/_20771_/Y (INVx1_ASAP7_75t_R)
+           33.441    0.000  749.639 ^ u_core.u_pixcor/_25375_/A (FAx1_ASAP7_75t_R)
+   0.578   36.527   61.219  810.858 v u_core.u_pixcor/_25375_/SN (FAx1_ASAP7_75t_R)
+           36.527    0.000  810.858 v u_core.u_pixcor/_20799_/A (INVx1_ASAP7_75t_R)
+   1.681   33.432   27.313  838.171 ^ u_core.u_pixcor/_20799_/Y (INVx1_ASAP7_75t_R)
+           33.432    0.000  838.171 ^ u_core.u_pixcor/_25401_/A (FAx1_ASAP7_75t_R)
+   0.578   36.526   61.217  899.388 v u_core.u_pixcor/_25401_/SN (FAx1_ASAP7_75t_R)
+           36.526    0.000  899.388 v u_core.u_pixcor/_20825_/A (INVx1_ASAP7_75t_R)
+   1.839   35.399   28.398  927.786 ^ u_core.u_pixcor/_20825_/Y (INVx1_ASAP7_75t_R)
+           35.399    0.000  927.786 ^ u_core.u_pixcor/_25413_/B (FAx1_ASAP7_75t_R)
+   0.578   36.440   60.939  988.725 v u_core.u_pixcor/_25413_/SN (FAx1_ASAP7_75t_R)
+           36.440    0.000  988.725 v u_core.u_pixcor/_20851_/A (INVx1_ASAP7_75t_R)
+   1.839   35.377   28.368 1017.093 ^ u_core.u_pixcor/_20851_/Y (INVx1_ASAP7_75t_R)
+           35.377    0.000 1017.093 ^ u_core.u_pixcor/_25424_/B (FAx1_ASAP7_75t_R)
+   0.578   34.003   30.995 1048.088 v u_core.u_pixcor/_25424_/CON (FAx1_ASAP7_75t_R)
+   0.579   52.724   24.560 1072.648 ^ u_core.u_pixcor/_25424_/SN (FAx1_ASAP7_75t_R)
+           52.724    0.000 1072.648 ^ u_core.u_pixcor/_20877_/A (INVx1_ASAP7_75t_R)
+   0.903   22.247   21.571 1094.219 v u_core.u_pixcor/_20877_/Y (INVx1_ASAP7_75t_R)
+           22.247    0.000 1094.219 v u_core.u_pixcor/_26292_/A (HAxp5_ASAP7_75t_R)
+   4.333  106.018  139.703 1233.922 v u_core.u_pixcor/_26292_/SN (HAxp5_ASAP7_75t_R)
+          106.018    0.000 1233.922 v u_core.u_pixcor/_18152_/A (NOR2x1_ASAP7_75t_R)
+   1.465   47.464   36.489 1270.411 ^ u_core.u_pixcor/_18152_/Y (NOR2x1_ASAP7_75t_R)
+           47.464    0.000 1270.411 ^ u_core.u_pixcor/_18200_/B (AND2x2_ASAP7_75t_R)
+   1.126   17.394   39.636 1310.046 ^ u_core.u_pixcor/_18200_/Y (AND2x2_ASAP7_75t_R)
+           17.394    0.000 1310.046 ^ u_core.u_pixcor/_18201_/A (AND3x1_ASAP7_75t_R)
+   1.511   31.459   42.023 1352.069 ^ u_core.u_pixcor/_18201_/Y (AND3x1_ASAP7_75t_R)
+           31.459    0.000 1352.069 ^ u_core.u_pixcor/_18202_/B (AND2x2_ASAP7_75t_R)
+   1.021   16.031   34.822 1386.891 ^ u_core.u_pixcor/_18202_/Y (AND2x2_ASAP7_75t_R)
+           16.031    0.000 1386.891 ^ u_core.u_pixcor/_18215_/A1 (AOI21x1_ASAP7_75t_R)
+   0.847   19.500   15.242 1402.133 v u_core.u_pixcor/_18215_/Y (AOI21x1_ASAP7_75t_R)
+           19.500    0.000 1402.133 v u_core.u_pixcor/_18216_/A (XOR2x2_ASAP7_75t_R)
+   1.066   20.115   50.791 1452.924 ^ u_core.u_pixcor/_18216_/Y (XOR2x2_ASAP7_75t_R)
+           20.115    0.000 1452.924 ^ u_core.u_pixcor/_18217_/B (AOI21x1_ASAP7_75t_R)
+   6.470   70.134   35.897 1488.822 v u_core.u_pixcor/_18217_/Y (AOI21x1_ASAP7_75t_R)
+           70.134    0.000 1488.822 v u_core.u_pixcor/_18232_/A (INVx1_ASAP7_75t_R)
+   6.768  106.765   73.225 1562.047 ^ u_core.u_pixcor/_18232_/Y (INVx1_ASAP7_75t_R)
+          106.765    0.000 1562.047 ^ u_core.u_pixcor/_18294_/C (NOR3x1_ASAP7_75t_R)
+   0.872   43.892   46.455 1608.502 v u_core.u_pixcor/_18294_/Y (NOR3x1_ASAP7_75t_R)
+           43.892    0.000 1608.502 v u_core.u_pixcor/_18297_/A2 (OAI21x1_ASAP7_75t_R)
+   0.525   25.836   22.091 1630.593 ^ u_core.u_pixcor/_18297_/Y (OAI21x1_ASAP7_75t_R)
+           25.836    0.000 1630.593 ^ u_core.u_pixcor/r_data2[79]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                           1630.593   data arrival time
+
+           50.000 2500.000 2500.000   clock clk (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                           2400.000 ^ u_core.u_pixcor/r_data2[79]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                   -14.150 2385.850   library setup time
+                           2385.850   data required time
+---------------------------------------------------------------------------
+                           2385.850   data required time
+                           -1630.593   data arrival time
+---------------------------------------------------------------------------
+                            755.257   slack (MET)
+
+
+Startpoint: u_core.r_skd_vld$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: o_busy (output port clocked by clk_io)
+Path Group: clk_io
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+           50.000    0.000    0.000   clock clk (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+           50.000    0.000    0.000 ^ u_core.r_skd_vld$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   1.118   40.524  100.712  100.712 v u_core.r_skd_vld$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+           40.524    0.000  100.712 v _1515_/A (BUFx6f_ASAP7_75t_R)
+   4.368   15.417   37.583  138.295 v _1515_/Y (BUFx6f_ASAP7_75t_R)
+           15.417    0.000  138.295 v _1516_/A (BUFx2_ASAP7_75t_R)
+   5.064   32.204   41.936  180.231 v _1516_/Y (BUFx2_ASAP7_75t_R)
+           32.204    0.000  180.231 v _1517_/A (BUFx2_ASAP7_75t_R)
+   9.744   54.761   59.751  239.982 v _1517_/Y (BUFx2_ASAP7_75t_R)
+           54.761    0.000  239.982 v _1518_/A (INVx1_ASAP7_75t_R)
+   5.000   80.362   55.875  295.857 ^ _1518_/Y (INVx1_ASAP7_75t_R)
+           80.362    0.000  295.857 ^ o_busy (out)
+                            295.857   data arrival time
+
+            0.000 2500.000 2500.000   clock clk_io (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                  -1250.000 1150.000   output external delay
+                           1150.000   data required time
+---------------------------------------------------------------------------
+                           1150.000   data required time
+                           -295.857   data arrival time
+---------------------------------------------------------------------------
+                            854.143   slack (MET)
+
+
+Startpoint: u_core.u_pixcor/r_vld2$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: o_vld (output port clocked by clk_io)
+Path Group: clk_io
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+           50.000    0.000    0.000   clock clk (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+           50.000    0.000    0.000 ^ u_core.u_pixcor/r_vld2$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+   0.578   33.215   93.694   93.694 v u_core.u_pixcor/r_vld2$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+           33.215    0.000   93.694 v u_core.u_pixcor/_14554_/A (INVx1_ASAP7_75t_R)
+   9.715  141.250   77.959  171.653 ^ u_core.u_pixcor/_14554_/Y (INVx1_ASAP7_75t_R)
+          141.250    0.000  171.653 ^ o_vld (out)
+                            171.653   data arrival time
+
+            0.000 2500.000 2500.000   clock clk_io (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                  -1250.000 1150.000   output external delay
+                           1150.000   data required time
+---------------------------------------------------------------------------
+                           1150.000   data required time
+                           -171.653   data arrival time
+---------------------------------------------------------------------------
+                            978.347   slack (MET)
+
+
+Startpoint: u_core.u_pixcor/r_data2[56]$_DFFE_PP_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: o_data[56] (output port clocked by clk_io)
+Path Group: clk_io
+Path Type: max
+
+     Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------
+           50.000    0.000    0.000   clock clk (rise edge)
+                     0.000    0.000   clock network delay (ideal)
+           50.000    0.000    0.000 ^ u_core.u_pixcor/r_data2[56]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+   1.564   41.455   93.295   93.295 v u_core.u_pixcor/r_data2[56]$_DFFE_PP_/QN (DFFHQNx1_ASAP7_75t_R)
+           41.455    0.000   93.295 v u_core.u_pixcor/_14603_/A (INVx1_ASAP7_75t_R)
+   5.000   77.315   51.012  144.307 ^ u_core.u_pixcor/_14603_/Y (INVx1_ASAP7_75t_R)
+           77.315    0.000  144.307 ^ o_data[56] (out)
+                            144.307   data arrival time
+
+            0.000 2500.000 2500.000   clock clk_io (rise edge)
+                     0.000 2500.000   clock network delay (ideal)
+                  -100.000 2400.000   clock uncertainty
+                     0.000 2400.000   clock reconvergence pessimism
+                  -1250.000 1150.000   output external delay
+                           1150.000   data required time
+---------------------------------------------------------------------------
+                           1150.000   data required time
+                           -144.307   data arrival time
+---------------------------------------------------------------------------
+                           1005.693   slack (MET)
+
+
