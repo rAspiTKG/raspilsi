@@ -1,0 +1,34 @@
+{
+ "signal": [
+  {
+   "name": "clk",
+   "wave": "p............."
+  },
+  {
+   "name": "ctrl_clk",
+   "wave": "p..",
+   "period": 4,
+   "phase": -1.58
+  },
+  {
+   "name": "i_d(r_req_c)",
+   "wave": "01.",
+   "period": 4,
+   "phase": -1.58
+  },
+  {
+   "name": "u_sync.r_m",
+   "wave": "0.....1......."
+  },
+  {
+   "name": "o_q",
+   "wave": "0......1......"
+  }
+ ],
+ "head": {
+  "text": "SYNC2: 2段同期。i_d の変化は2つ目の clk の立ち上がりで o_q に出る"
+ },
+ "config": {
+  "hscale": 1
+ }
+}

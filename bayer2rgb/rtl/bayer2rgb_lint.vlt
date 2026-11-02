@@ -1,0 +1,13 @@
+`verilator_config
+// ============================================================================
+// lint の例外(-Wall で残る警告のうち、意図どおりのもの)
+// ============================================================================
+// 使わない格納数出力(o_cnt)は未接続にしている
+lint_off -rule PINCONNECTEMPTY -file "*rtl/*.sv" -match "*'o_cnt'*"
+// フレーム設定(cfg_t)は全ブロックへ配り、各ブロックは必要なフィールドだけを使う
+lint_off -rule UNUSEDSIGNAL -file "*rtl/*.sv" -match "*'i_cfg'*"
+lint_off -rule UNUSEDSIGNAL -file "*rtl/*.sv" -match "*'i_ctl'*"
+// パッケージの定数は検証環境・ソフトウェア向けにも定義している
+lint_off -rule UNUSEDPARAM -file "*rtl/BAYER2RGB_PKG.sv"
+// シミュレーション用の検査(ifndef SYNTHESIS)ではリセットを条件に使う
+lint_off -rule SYNCASYNCNET

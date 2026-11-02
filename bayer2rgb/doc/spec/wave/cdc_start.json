@@ -1,0 +1,72 @@
+{
+ "signal": [
+  {
+   "name": "clk",
+   "wave": "p..........................."
+  },
+  {
+   "name": "ctrl_clk",
+   "wave": "p.....",
+   "period": 4,
+   "phase": -1.58
+  },
+  {},
+  [
+   "制御系",
+   {
+    "name": "i_start",
+    "wave": "10....",
+    "period": 4,
+    "phase": -1.58
+   },
+   {
+    "name": "r_req_c",
+    "wave": "01....",
+    "period": 4,
+    "phase": -1.58
+   },
+   {
+    "name": "s_ack_c",
+    "wave": "0..1..",
+    "period": 4,
+    "phase": -1.58
+   },
+   {
+    "name": "o_busy",
+    "wave": "01..0.",
+    "period": 4,
+    "phase": -1.58
+   }
+  ],
+  {},
+  [
+   "映像系",
+   {
+    "name": "s_req_v",
+    "wave": "0......1...................."
+   },
+   {
+    "name": "r_req_d_v",
+    "wave": "0.......1..................."
+   },
+   {
+    "name": "o_ctl.start",
+    "wave": "0.......10.................."
+   },
+   {
+    "name": "o_ctl.cfg.width",
+    "wave": "=.......=...................",
+    "data": [
+     "3840",
+     "40"
+    ]
+   }
+  ]
+ ],
+ "head": {
+  "text": "CDC: START の受け渡し(トグル + 2段同期 + ACK)。映像系は設定を r_cfg_v に移して start を出す"
+ },
+ "config": {
+  "hscale": 1
+ }
+}

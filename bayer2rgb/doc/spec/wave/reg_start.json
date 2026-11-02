@@ -1,0 +1,54 @@
+{
+ "signal": [
+  {
+   "name": "ctrl_clk",
+   "wave": "p............."
+  },
+  {
+   "name": "req.vld",
+   "wave": "0...10...10..."
+  },
+  {
+   "name": "req.data.we",
+   "wave": "x...=x...=x...",
+   "data": [
+    "1",
+    "0"
+   ]
+  },
+  {
+   "name": "req.data.addr",
+   "wave": "x...=x...=x...",
+   "data": [
+    "000",
+    "008"
+   ]
+  },
+  {
+   "name": "rsp.vld",
+   "wave": "10...10...10.."
+  },
+  {
+   "name": "r_start_pend",
+   "wave": "0....10......."
+  },
+  {
+   "name": "o_start",
+   "wave": "0.....10......"
+  },
+  {
+   "name": "i_cdc_busy",
+   "wave": "0......1..0..."
+  },
+  {
+   "name": "r_frm_busy",
+   "wave": "0.....1......."
+  }
+ ],
+ "head": {
+  "text": "REG: START の書き込み → o_start(CDCが空いていれば1クロック)→ i_cdc_busy"
+ },
+ "config": {
+  "hscale": 1
+ }
+}
